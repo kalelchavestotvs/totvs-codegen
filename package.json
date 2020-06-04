@@ -1,15 +1,22 @@
 {
   "name": "totvs-codegen",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
+    "build:frontend": "ng build frontend --prod",
+    "build:backend": "tsc -p ./src-backend",
+    "build:data": "xcopy .\\data\\* .\\dist\\data\\  /y /s",
+    "build:installation": "xcopy .\\src-backend\\package.json .\\dist\\ /y /s && xcopy .\\src-backend\\*.bat .\\dist\\ /y /s",
+    "build": "npm run build:backend && npm run build:installation && npm run build:frontend && npm run build:data && npm run build:bin",
+    "serve": "node ./dist/entry.js",
+    "prod": "npm run build && npm run serve",
+    "dev:backendOLD": "nodemon --watch \"src-backend/\" --exec \"ts-node src-backend/entry.ts\" -e ts",
+    "dev:backend": "nodemon --watch \"src-backend/\" --exec \"npm run build:backend && npm run serve\" -e ts",
+    "dev:frontend": "ng build frontend --watch",
+    "dev:data": "xcopy .\\data\\* .\\dist\\data\\  /y /s",
+    "dev": "npm run dev:data & npm run dev:backend & npm run dev:frontend & npm run serve"
   },
   "private": true,
+  "main": "index.js",
   "dependencies": {
     "@angular/animations": "~9.1.4",
     "@angular/common": "~9.1.4",
@@ -19,8 +26,13 @@
     "@angular/platform-browser": "~9.1.4",
     "@angular/platform-browser-dynamic": "~9.1.4",
     "@angular/router": "~9.1.4",
+    "@po-ui/ng-components": "2.3.0",
+    "node-windows": "1.0.0-beta.1",
     "rxjs": "~6.5.4",
+    "totvs-gps-services": "3.0.1",
+    "totvs-gps-utils": "3.0.1",
     "tslib": "^1.10.0",
+    "uuid": "^8.1.0",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
@@ -42,6 +54,10 @@
     "protractor": "~5.4.3",
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
-    "typescript": "~3.8.3"
+    "typescript": "~3.8.3",
+    "@types/express": "^4.17.4",
+    "axios": "^0.19.2",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.2"
   }
 }

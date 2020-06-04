@@ -1,0 +1,14 @@
+{
+  "name": "codegen",
+  "version": "1.0.0",
+  "description": "TOTVS CodeGen Runtime",
+  "scripts": {
+    "start": "node entry.js",
+    "install": "node install.js",
+    "uninstall": "node uninstall.js"
+  },
+  "dependencies": {
+    "node-windows": "1.0.0-beta.1",
+    "tslib": "^2.0.0"
+  }
+}

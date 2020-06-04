@@ -1,0 +1,7 @@
+{
+    "type": "table.index",
+    "tables": [
+        { "name": "modalid", "description": "Modalidade de comercializacao" },
+        { "name": "propost", "description": "Proposta" }
+    ]
+}

@@ -1,0 +1,24 @@
+<po-modal
+  #modal
+  p-hide-close
+  p-size="sm"
+  p-click-out="false"
+  p-title="Novo relacionamento">
+  <form>
+    <ng-container>
+      <div class="po-row">
+        <po-radio-group 
+          class="po-md-12"
+          name="relationType"
+          p-columns="1"
+          p-label="Tipo de relacionamento"
+          [p-options]="relationOptions"
+          [(ngModel)]="relationType">
+        </po-radio-group>
+      </div>
+    </ng-container>
+  </form>
+</po-modal>
+
+<enum-edit #enumEditComponent></enum-edit>
+<zoom-edit #zoomEditComponent></zoom-edit>

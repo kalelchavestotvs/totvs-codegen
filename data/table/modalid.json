@@ -1,0 +1,13 @@
+{
+    "type": "table",
+    "name": "modalid",
+    "fields": [
+        { "name": "cd-modalidade", "description": "Modalidade", "type": "integer", "format": "99", "mandatory": true },
+        { "name": "ds-modalidade", "description": "Descricao", "type": "character", "format": "x(80)", "mandatory": true },
+        { "name": "cd-userid", "description": "Usuario Ult Atualiz", "type": "character", "format": "x(10)" },
+        { "name": "dt-atualizacao", "description": "Data Ult Atualiz", "type": "date" }
+    ],
+    "indexes": [
+        { "name": "pk", "fields": ["cd-modalidade"], "primary": true }
+    ]
+}

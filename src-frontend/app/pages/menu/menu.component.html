@@ -1,0 +1,23 @@
+<po-page-list
+  p-title="TOTVS Healthcare CodeGen"
+  [p-actions]="pageActions"
+  [p-filter]="pageFilter">
+  <loading></loading>
+  <div class="po-row">
+    <!-- lista de aplicações geradas -->
+    <po-widget 
+      class="po-md-12" 
+      p-title="Aplicações">
+      <po-table 
+        #appTable
+        class="po-md-12"
+        p-hide-text-overflow
+        p-selectable
+        p-single-select
+        [p-columns]="applicationListColumns"
+        [p-items]="applicationList">
+      </po-table>
+    </po-widget>
+  </div>
+  <generate #generateComponent></generate>
+</po-page-list>

@@ -1,0 +1,21 @@
+<po-modal
+  #modal
+  p-hide-close
+  p-click-out="false"
+  p-title="Gerar aplicação"
+  [p-primary-action]="modalPrimaryAction"
+  [p-secondary-action]="modalSecondaryAction">
+  <form>
+    <div class="po-row">
+      <ng-container>
+        <po-checkbox-group 
+          class="po-md-12"
+          name="selectedValues"
+          p-label="Artefatos"
+          [p-options]="templateOptions"
+          [(ngModel)]="selectedValues">
+        </po-checkbox-group>
+      </ng-container>
+    </div>
+  </form>
+</po-modal>

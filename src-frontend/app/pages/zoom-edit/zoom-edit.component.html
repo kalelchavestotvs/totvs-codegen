@@ -1,0 +1,47 @@
+<po-modal
+  #modal
+  p-hide-close
+  p-click-out="false"
+  p-title="Zoom">
+  <form>
+    <ng-container *ngIf="value">
+      <div class="po-row">
+        <po-lookup 
+          class="po-md-12"
+          name="application"
+          p-label="Aplicação de Referência"
+          [p-columns]="zoomEditService.COLUMNS"
+          [p-field-label]="zoomEditService.FIELD_LABEL"
+          [p-field-value]="zoomEditService.FIELD_VALUE"
+          [p-filter-service]="zoomEditService"
+          (p-selected)="onSelectApplication()"
+          [(ngModel)]="value.application">
+        </po-lookup>
+
+        <ng-container *ngIf="fieldOptions">
+          <po-combo 
+            class="po-md-6"
+            name="keyField"
+            p-label="Campo Chave"
+            [p-options]="fieldOptions"
+            [(ngModel)]="value.keyField">
+          </po-combo>
+          <po-combo 
+            class="po-md-6"
+            name="labelField"
+            p-label="Campo Label"
+            [p-options]="fieldOptions"
+            [(ngModel)]="value.labelField">
+          </po-combo>
+        </ng-container>
+
+        <po-table *ngIf="fields"
+          class="po-md-12"
+          p-selectable
+          [p-columns]="tableColumns"
+          [p-items]="fields">
+        </po-table>
+      </div>
+    </ng-container>
+  </form>
+</po-modal>

@@ -1,0 +1,75 @@
+<po-modal
+  #modal
+  p-hide-close
+  p-click-out="false"
+  [p-title]="title">
+  <form>
+    <ng-container *ngIf="value">
+      <div class="po-row">
+        <po-input 
+          class="po-md-6"
+          name="name"
+          p-label="Propriedade"
+          [(ngModel)]="value.name">
+        </po-input>
+        <po-input 
+          class="po-md-6"
+          name="description"
+          p-label="Descrição (label)"
+          [(ngModel)]="value.description">
+        </po-input>
+        <po-input 
+          class="po-md-6"
+          name="ablType"
+          p-label="Tipo (ABL)"
+          [(ngModel)]="value.ablType">
+        </po-input>
+        <po-input 
+          class="po-md-6"
+          name="ablFixedValue"
+          p-label="Valor Fixo (ABL)"
+          [(ngModel)]="value.ablFixedValue">
+        </po-input>
+        <po-input 
+          class="po-md-6"
+          name="jsType"
+          p-label="Tipo (JS)"
+          [(ngModel)]="value.jsType">
+        </po-input>
+        <po-input 
+          class="po-md-6"
+          name="jsInitValue"
+          p-label="Valor Inicial (JS)"
+          [(ngModel)]="value.jsInitValue">
+        </po-input>
+        <po-input 
+          class="po-md-6"
+          name="inputFormat"
+          p-label="Formato Entrada"
+          [(ngModel)]="value.inputFormat">
+        </po-input>
+        <po-number 
+          class="po-md-6"
+          name="maxSize"
+          p-label="Tamanho máximo"
+          [(ngModel)]="value.maxSize">
+        </po-number>
+        <po-combo 
+          *ngIf="relationOptions"
+          class="po-md-12"
+          name="relation"
+          p-label="Enumerador / Zoom"
+          [p-options]="relationOptions"
+          [(ngModel)]="relation">
+        </po-combo>
+        <po-checkbox-group 
+          class="po-md-12"
+          name="selectedOptions"
+          p-label="Opções"
+          [p-options]="valueOptions"
+          [(ngModel)]="selectedOptions">
+        </po-checkbox-group>
+      </div>
+    </ng-container>
+  </form>
+</po-modal>

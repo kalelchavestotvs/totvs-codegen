@@ -1,0 +1,54 @@
+<po-modal
+  #modal
+  p-hide-close
+  p-click-out="false"
+  p-title="Enumerador">
+  <form>
+    <ng-container *ngIf="value">
+      <div class="po-row">
+        <po-input 
+          class="po-md-4"
+          name="component"
+          p-label="Componente"
+          p-tooltip="Informar nome em inglês, tudo em minúsculo, separando as palavras por hífen"
+          (p-change)="onComponentChange()"
+          [(ngModel)]="value.component">
+        </po-input>
+        <po-input 
+          class="po-md-8"
+          name="description"
+          p-label="Descrição"
+          [(ngModel)]="value.description">
+        </po-input>
+
+        <po-divider 
+          class="po-md-12"
+          p-label="Adicionar">
+        </po-divider>
+        <po-input 
+          class="po-md-4"
+          name="value"
+          p-label="Valor"
+          [(ngModel)]="selected.value">
+        </po-input>
+        <po-input 
+          class="po-md-7"
+          name="label"
+          p-label="Descrição"
+          [(ngModel)]="selected.label">
+        </po-input>
+        <po-button 
+          class="po-md-1 po-mt-4"
+          p-label="+"
+          (p-click)="onAddClick()">
+        </po-button>
+
+        <po-table 
+          class="po-md-12"
+          [p-columns]="tableColumns"
+          [p-items]="value.values">
+        </po-table>
+      </div>
+    </ng-container>
+  </form>
+</po-modal>

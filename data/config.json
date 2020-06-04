@@ -1,0 +1,6 @@
+{
+    "type": "config",
+    "templatePath": "",
+    "outputPath": "c:\\temp\\codegen",
+    "sharedPath": "c:\\temp\\codegen"
+}

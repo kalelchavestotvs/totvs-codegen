@@ -1,0 +1,16 @@
+{
+    "type": "table",
+    "name": "propost",
+    "fields": [
+        { "name": "cd-modalidade", "description": "Modalidade", "type": "integer", "format": "99", "mandatory": true },
+        { "name": "nr-proposta", "description": "Proposta", "type": "integer", "format": "999999", "mandatory": true },
+        { "name": "cd-sit-proposta", "description": "Situacao", "type": "integer", "format": "99" },
+        { "name": "ds-observacao", "description": "Observacoes", "type": "character", "format": "x(100)" },
+        { "name": "cod-usuar-ult-atualiz", "description": "Usuario Ult Atualiz", "type": "character", "format": "x(10)" },
+        { "name": "dat-ult-atualiz", "description": "Data Ult Atualiz", "type": "date" },
+        { "name": "hra-ult-atualiz", "description": "Hora Ult Atualiz", "type": "character", "format": "99:99:99" }
+    ],
+    "indexes": [
+        { "name": "propost1", "fields": ["cd-modalidade","nr-proposta"], "primary": true }
+    ]
+}
