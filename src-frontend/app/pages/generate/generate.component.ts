@@ -3,7 +3,6 @@ import { PoModalComponent, PoCheckboxGroupOption, PoModalAction, PoNotificationS
 import { Application } from '../../models/application';
 import { DataService } from '../../services/data.service';
 import { RequestService } from '../../services/request.service';
-import { TotvsStringUtils } from "totvs-gps-utils";
 
 @Component({
   selector: 'generate',
@@ -74,7 +73,7 @@ export class GenerateComponent {
     return new Promise(resolve =>  {
       _service.generate(_app, _templates, _session)
         .then(value => {
-          TotvsStringUtils.getInstance().copyTextToClipboard(value.outputPath);
+          // TotvsStringUtils.getInstance().copyTextToClipboard(value.outputPath);
           _notificationService.success(`Aplicação gerada em ${value.outputPath}`);
           resolve(true);
         })

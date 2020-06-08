@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 
 import { PoModule } from '@po-ui/ng-components';
 
-import { TotvsGpsServicesModule } from "totvs-gps-services";
+import { ZikiHttpServicesModule } from "ziki-http-services";
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -32,7 +32,7 @@ const modules = [
   AppRoutingModule,
   BrowserAnimationsModule,
   PoModule,
-  TotvsGpsServicesModule
+  ZikiHttpServicesModule
 ];
 const services = [
 ];

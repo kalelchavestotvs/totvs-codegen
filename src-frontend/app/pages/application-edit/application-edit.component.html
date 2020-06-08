@@ -1,99 +1,101 @@
 <po-page-edit
-  p-title="Nova aplicação"
+  [p-title]="pageTitle"
   (p-cancel)="onCancelClick()"
   (p-save)="onSaveClick()">
   <loading></loading>
-  <form class="po-row" *ngIf="application">
+  <form class="po-row">
 
-    <!-- dados da aplicacao -->
-    <po-widget 
-      class="po-md-12 po-mb-2"
-      p-title="Dados da aplicação">
-      <div class="po-row">
-        <po-combo 
-          class="po-md-6"
-          name="table"
-          p-label="Tabela"
-          [p-options]="tableOptions"
-          (p-change)="onTableChange()"
-          [(ngModel)]="application.table">
-        </po-combo>
-        <po-input 
-          class="po-md-6"
-          name="component"
-          [p-disabled]="!application.table"
-          p-label="Nome do componente"
-          p-tooltip="Informar nome em inglês, tudo em minúsculo, separando as palavras por hífen"
-          (p-change)="onChangeComponent()"
-          [(ngModel)]="application.component">
-        </po-input>
-        <po-input 
-          class="po-md-6"
-          name="description"
-          [p-disabled]="!application.table"
-          p-label="Descrição"
-          [(ngModel)]="application.description">
-        </po-input>
-        <po-input 
-          class="po-md-3"
-          name="module"
-          [p-disabled]="!application.table"
-          p-label="Módulo"
-          [(ngModel)]="application.module">
-        </po-input>
-        <po-input 
-          class="po-md-3"
-          name="version"
-          [p-disabled]="!application.table"
-          p-label="Versão"
-          [(ngModel)]="application.version">
-        </po-input>
-      </div>
-    </po-widget>
+    <po-accordion class="po-row">
+      <po-accordion-item p-label="Dados da aplicação" #accordionComponent>
+        <div class="po-row" *ngIf="application">
+          <po-combo 
+            class="po-md-6"
+            name="table"
+            p-label="Tabela"
+            [p-options]="tableOptions"
+            (p-change)="onTableChange()"
+            [(ngModel)]="application.table">
+          </po-combo>
+          <po-input 
+            class="po-md-6"
+            name="component"
+            [p-disabled]="!application.table"
+            p-label="Nome do componente"
+            p-tooltip="Informar nome em inglês, tudo em minúsculo, separando as palavras por hífen"
+            (p-change)="onChangeComponent()"
+            [(ngModel)]="application.component">
+          </po-input>
+          <po-input 
+            class="po-md-6"
+            name="description"
+            [p-disabled]="!application.table"
+            p-label="Descrição"
+            [(ngModel)]="application.description">
+          </po-input>
+          <po-input 
+            class="po-md-3"
+            name="module"
+            [p-disabled]="!application.table"
+            p-label="Módulo"
+            [(ngModel)]="application.module">
+          </po-input>
+          <po-input 
+            class="po-md-3"
+            name="version"
+            [p-disabled]="!application.table"
+            p-label="Versão"
+            [(ngModel)]="application.version">
+          </po-input>
+        </div>
+      </po-accordion-item>
 
+      <po-accordion-item p-label="Propriedades" #accordionProperties>
+        <ng-container *ngIf="application">
+          <!-- campos -->
+          <po-widget 
+            class="po-md-6 po-mb-2"
+            p-title="Campos adicionados">
+            <po-table 
+              class="po-md-12"
+              p-hide-text-overflow
+              p-height="400"
+              [p-actions]="applicationFieldsActions"
+              [p-columns]="applicationFieldsColumns"
+              [p-items]="insertedFields">
+            </po-table>
+          </po-widget>
 
-    <!-- campos -->
-    <po-widget 
-      class="po-md-6 po-mb-2"
-      p-title="Campos adicionados">
-      <po-table 
-        class="po-md-12"
-        p-hide-text-overflow
-        p-height="400"
-        [p-actions]="applicationFieldsActions"
-        [p-columns]="applicationFieldsColumns"
-        [p-items]="insertedFields">
-      </po-table>
-    </po-widget>
+          <po-widget 
+            class="po-md-3 po-mb-2"
+            p-title="Campos disponíveis">
+            <po-table 
+              class="po-md-12"
+              p-hide-text-overflow
+              p-height="400"
+              [p-actions]="availableFieldsActions"
+              [p-columns]="availableFieldsColumns"
+              [p-items]="availableFields">
+            </po-table>
+          </po-widget>
 
-    <po-widget 
-      class="po-md-3 po-mb-2"
-      p-title="Campos disponíveis">
-      <po-table 
-        class="po-md-12"
-        p-hide-text-overflow
-        p-height="400"
-        [p-actions]="availableFieldsActions"
-        [p-columns]="availableFieldsColumns"
-        [p-items]="availableFields">
-      </po-table>
-    </po-widget>
-
-    <!-- relacionamentos -->
-    <po-widget 
-      class="po-md-3 po-mb-2"
-      p-title="Relacionamentos"
-      p-primary-label="Adicionar"
-      (p-primary-action)="onAddRelationClick()">
-      <po-table 
-        class="po-md-12"
-        p-hide-text-overflow
-        p-height="360"
-        [p-actions]="relationsActions"
-        [p-columns]="relationsColumns"
-        [p-items]="relations">
-      </po-table>
-    </po-widget>
+          <!-- relacionamentos -->
+          <po-widget 
+            class="po-md-3 po-mb-2"
+            p-title="Relacionamentos"
+            p-primary-label="Adicionar"
+            (p-primary-action)="onAddRelationClick()">
+            <po-table 
+              class="po-md-12"
+              p-hide-text-overflow
+              p-height="360"
+              [p-actions]="relationsActions"
+              [p-columns]="relationsColumns"
+              [p-items]="relations">
+            </po-table>
+          </po-widget>
+        </ng-container>
+      </po-accordion-item>
+    </po-accordion>
 
     <field-edit #fieldEditComponent></field-edit>
     <application-name #applicationNameComponent></application-name>

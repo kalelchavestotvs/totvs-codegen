@@ -1,27 +1,61 @@
-import { TemplateFileData, TextLineBreaker } from 'model';
+import { TemplateFileData, TextLineBreaker, PropertyValue } from 'model';
 
-function _pascalCase(txt:string) {
-    let words = txt.split('-')
-    return words.map(w => { return w.substring(0,1).toUpperCase() + w.substring(1).toLowerCase() }).join('')
+function _pascalCase(attr:PropertyValue): PropertyValue {
+    if (!attr) return null
+    let words = attr.value.split('-')
+    attr.value = words.map(w => { return w.substring(0,1).toUpperCase() + w.substring(1).toLowerCase() }).join('')
+    return attr
 }
 
-function _camelCase(txt:string) {
-    let r = _pascalCase(txt)
-    return r.substring(0,1).toLowerCase() + r.substring(1)
+function _camelCase(attr:PropertyValue): PropertyValue {
+    if (!attr) return null
+    let r = _pascalCase(attr)
+    r.value = r.value.substring(0,1).toLowerCase() + r.value.substring(1)
+    return r
 }
 
-function _plural(txt:string) {
-    if (txt.endsWith('y'))
-        return txt.substring(0,txt.length-1) + 'ies'
-    if (txt.match(/[0-9s]$/gi))
-        return txt
-    return txt + 's'
+function _plural(attr:PropertyValue): PropertyValue {
+    if (!attr) return null
+    if (attr.value.endsWith('y'))
+        attr.value = attr.value.substring(0,attr.value.length-1) + 'ies'
+    else if (!attr.value.match(/[0-9s]$/gi))
+        attr.value = attr.value + 's'
+    return attr
 }
 
-const convertFunctions:any = {
+function _upper(attr:PropertyValue): PropertyValue {
+    if (!attr) return null
+    attr.value = attr.value.toUpperCase()
+    return attr
+}
+
+function _lower(attr:PropertyValue): PropertyValue {
+    if (!attr) return null
+    attr.value = attr.value.toUpperCase()
+    return attr
+}
+
+function _ablCast(attr:PropertyValue): PropertyValue {
+    if (!attr) return null
+    let t = attr.value.toLowerCase()
+    if (t.startsWith('int'))
+        attr.value = 'integer'
+    else if (t.startsWith('dec'))
+        attr.value = 'decimal'
+    else if (t.startsWith('log'))
+        attr.value = 'logical'
+    else
+        attr.value = 'string'
+    return attr
+}
+
+const convertFunctions = {
     pascalcase: _pascalCase.bind(this),
     camelcase: _camelCase.bind(this),
-    plural: _plural.bind(this)
+    plural: _plural.bind(this),
+    upper: _upper.bind(this),
+    lower: _lower.bind(this),
+    ablcast: _ablCast.bind(this)
 }
 
 const specialChars = {
@@ -34,11 +68,11 @@ const specialChars = {
 
 export class TemplateParser {
 
-    private readonly regexAttribute = /#\[([\w\d.,;!\=\:]+)\]#/gi
-    private readonly regexLoopStart = /@\[([\w\d.,;!\=\:]+)\]@/gi
-    private readonly regexLoopEnd = /@\[end\]@/gi
-    private readonly regexCondStart = /\?\[([\w\d.,;!\=\:]+)\]\?/gi
-    private readonly regexCondEnd = /\?\[end\]\?/gi
+    private readonly regexAttribute = /#\[([\w\d.,;!\=\:\&]+)\]#{1}/gi
+    private readonly regexLoopStart = /@\[([\w\d.,;!\=\:\&]+)\]@{1}/gi
+    private readonly regexLoopEnd = /@\[end\]@{1}/gi
+    private readonly regexCondStart = /\?\[([\w\d.,;!\=\:\&]+)\]\?{1}/gi
+    private readonly regexCondEnd = /\?\[end\]\?{1}/gi
 
     parseStr(txt:string,data:TemplateFileData): string {
         //#region loops
@@ -62,10 +96,10 @@ export class TemplateParser {
                 let cond = []
                 if (paramAttrSplit.length>1)
                     cond = paramAttrSplit[1].split(specialChars.CONDITION_SPLIT)
-                let value = this.applyAttributeValue(attr,data)
+                let loopValue = this.applyAttributeValue(attr,data)
 
-                if (Array.isArray(value)) {
-                    let filtered = value.filter(v => this.validateAttributes(cond, Object.assign({},data,{item:v})))
+                if ((loopValue) && Array.isArray(loopValue.value)) {
+                    let filtered = loopValue.value.filter(v => this.validateAttributes(cond, Object.assign({},data,{item:v})))
                     filtered.forEach((v,i,a) => {
                         let loopItem = Object.assign({},v)
                         loopItem.isFirst = (i == 0)
@@ -179,9 +213,7 @@ export class TemplateParser {
     }
 
     private validateAttributes(args:string[],data:TemplateFileData): boolean {
-        let result = true
-        args.forEach(arg => {
-            if (!result) return
+        let result = args.map(arg => {
             let negated = false
             let params = arg.split(specialChars.CONDITION_VALUE)
             if (params[0].startsWith(specialChars.NOT)) {
@@ -189,21 +221,22 @@ export class TemplateParser {
                 negated = true
             }
             let attrValue = this.applyAttributeValue(params[0].trim(),data)
+            if (attrValue.value == null)
+                attrValue.value = ''
             if (params.length==1) {
-                let v1 = !!attrValue
-                result = (negated ? !v1 : v1)
+                let v1 = !!(attrValue?.value)
+                return v1 != negated
             }
             else if (params.length==2) {
-                let v1 = String(attrValue).toString().toLowerCase()
-                let v2 = String(params[1]).toString().trim().toLowerCase()
-                result = (negated ? (v1!=v2) : (v1==v2))
+                let v1 = String(attrValue?.value || '').toString().toLowerCase()
+                let v2 = String(params[1] || '').toString().trim().toLowerCase()
+                return (negated ? (v1!=v2) : (v1==v2))
             }
             else {
-                result = false
+                return false
             }
         })
-        
-        return result
+        return !result.includes(false)
     }
 
     private applyAttribute(attr:string,data:TemplateFileData): string {
@@ -211,40 +244,39 @@ export class TemplateParser {
         if (args.length==0)
             return attr
 
-        let result = (this.applyAttributeValue(args.shift(),data) || '')
+        let result = (this.applyAttributeValue(args.shift(),data) || {value: ''})
         args.forEach(arg => { result = this.applyFunction(result,arg) })
-
-        return result
+        return result?.value
     }
 
-    private applyAttributeValue(attr:string,data:TemplateFileData) {
+    private applyAttributeValue(attr:string,data:TemplateFileData): PropertyValue {
         let args = attr.trim().split(specialChars.ATTRIBUTE_SPLIT)
         if (args.length==2) {
             let attrParent: string = args[0]
             let attrName: string = args[1]
             switch (attrParent) {
                 case 'app':
-                    return data.app[attrName]
+                    return { value: data.app[attrName], data: data, attribute: 'app', property: attrName }
                 case 'enum':
-                    return data.enum[attrName]
+                    return { value: data.enum[attrName], data: data, attribute: 'enum', property: attrName }
                 case 'zoom':
-                    return data.zoom[attrName]
+                    return { value: data.zoom[attrName], data: data, attribute: 'zoom', property: attrName }
                 default:
-                    break;
+                    return null;
             }
         }
         else if((args.length==1)&&(data.item)) {
-            return data.item[args[0]]
+            return { value: data.item[args[0]], data: data, attribute: 'item', property: args[0] }
         }
 
         return null
     }
 
-    private applyFunction(txt:string,fnc:string): string {
+    private applyFunction(attr:PropertyValue,fnc:string): PropertyValue {
         let _f = convertFunctions[fnc.toLowerCase()]
-        if (_f instanceof Function)
-            return _f(txt)
-        return txt
+        if ((attr) && (_f instanceof Function))
+            return _f(attr)
+        return attr
     }
 
 }

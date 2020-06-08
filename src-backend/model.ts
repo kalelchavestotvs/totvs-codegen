@@ -49,6 +49,13 @@ export interface IZoom {
     isNumeric?:boolean
 }
 
+export interface PropertyValue {
+    value:string
+    data?:any
+    attribute?:string
+    property?:string
+}
+
 
 export interface TemplateFile {
     inputFile:string

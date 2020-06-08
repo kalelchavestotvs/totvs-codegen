@@ -1,38 +1,38 @@
 using classes.query.*.
 using classes.utils.*.
 
-{include/i-prgvrs.i BOSAU-#[Table.component,Upper]# 2.00.02.001 } /*** 010201 ***/
+{include/i-prgvrs.i BOSAU-#[app.component,Upper]# 2.00.02.001 } /*** 010201 ***/
 
 &IF "{&EMSFND_VERSION}" >= "1.00" &THEN
-    {include/i-license-manager.i bosau-#[Table.component]# MUT}
+    {include/i-license-manager.i bosau-#[app.component]# MUT}
 &ENDIF
 
-this-procedure:private-data = "bosau-#[Table.component]#".
+this-procedure:private-data = "bosau-#[app.component]#".
 
 {hdp/hdrunpersis.iv}
 {rtp/rtrowerror.i}
-{#[Table.appModule]#/bosau/bosau-#[Table.component]#.i}
+{#[app.module]#/bosau/bosau-#[app.component]#.i}
 
-function validateSearchFilter returns log (buffer bf#[Table.module]#Filter for tmp#[Table.module]#Filter):
+function validateSearchFilter returns log (buffer bf#[app.component,PascalCase]#Filter for tmp#[app.component,PascalCase]#Filter):
     // valida o minimo de informacoes no filtro
     return true.
 end function.
 
 procedure getById:
 
-    #[whileFields,isKey=true]#
-    define input        parameter #[Field.fieldName]#-par like #[Table.name]#.#[Field.fieldName]# no-undo.
-    #[endWhileFields]#
-    define output       parameter table for tmp#[Table.module]#.
+@[app.fields,isPrimary]@
+    define input        parameter #[field]#-par like #[app.table]#.#[field]# no-undo.
+@[end]@
+    define output       parameter table for tmp#[app.component,PascalCase]#.
     define input-output parameter table for rowErrors.         
 
-    empty temp-table tmp#[Table.module]#.
-    for first #[Table.name]#
-       #[whileFields,isKey=true]#
-       #[IF,isFirst]#where#[endIF]##[IF,!isFirst]#  and#[endIF]# #[Table.name]#.#[Field.fieldName]# = #[Field.fieldName]#-par
-       #[endWhileFields]#
+    empty temp-table tmp#[app.component,PascalCase]#.
+    for first #[app.table]#
+@[app.fields,isPrimary]@
+       ?[isFirst]?where?[end]??[!isFirst]?  and?[end]? #[app.table]#.#[field]# = #[field]#-par
+@[end]@
              no-lock:
-        run createTemp#[Table.module]#.
+        run createTemp#[app.component,PascalCase]#.
         return "OK".
     end.
 
@@ -44,9 +44,9 @@ procedure getByFilter:
 
     define input        parameter startRow     as integer                 no-undo.
     define input        parameter pageSize     as integer                 no-undo.
-    define input        parameter table       for tmp#[Table.module]#Filter.    
+    define input        parameter table       for tmp#[app.component,PascalCase]#Filter.    
     define output       parameter hasNext      as logical                 no-undo.
-    define output       parameter table       for tmp#[Table.module]#.
+    define output       parameter table       for tmp#[app.component,PascalCase]#.
     define input-output parameter table       for rowErrors.         
 
     def var oQuery    as GpsQuery       no-undo.
@@ -54,45 +54,56 @@ procedure getByFilter:
     def var in-search-value-aux  as int no-undo.
     def var lg-value-integer-aux as log no-undo.
 
-    empty temp-table tmp#[Table.module]#.
+    empty temp-table tmp#[app.component,PascalCase]#.
 
-    run adjustSearchFields(input-output table tmp#[Table.module]#Filter).
+    run adjustSearchFields(input-output table tmp#[app.component,PascalCase]#Filter).
 
-    find first tmp#[Table.module]#Filter no-lock no-error.
-    if (not avail tmp#[Table.module]#Filter)
-    or (not validateSearchFilter(buffer tmp#[Table.module]#Filter))
+    find first tmp#[app.component,PascalCase]#Filter no-lock no-error.
+    if (not avail tmp#[app.component,PascalCase]#Filter)
+    or (not validateSearchFilter(buffer tmp#[app.component,PascalCase]#Filter))
     then do:
         run insertErrorGP(input 2653, input "", input "", input-output table rowErrors).
         return "NOK".
     end.
 
     oQuery = new GpsQuery().
-    oQuery:addBuffer(buffer #[Table.name]#:handle).
+    oQuery:addBuffer(buffer #[app.table]#:handle).
     oQuery:setStartRow(startRow):setPageSize(pageSize).
-    oQuery:setMethod("createTemp#[Table.module]#", this-procedure).
+    oQuery:setMethod("createTemp#[app.component,PascalCase]#", this-procedure).
 
-    for first tmp#[Table.module]#Filter:
+    for first tmp#[app.component,PascalCase]#Filter:
         oWhere = oQuery:and().
 
-        #[whileFields,isFilter=true]#
-        *[progress/bo/assignRangeFilter.txt,isRangeFilter=true]**[progress/bo/assignFilter.txt,isRangeFilter=false]*
-        #[endWhileFields]#
+@[app.fields,isFilter&!isRangeFilter]@
+        if  (tmp#[app.component,PascalCase]#Filter.#[field]# <> ?)
+        and (tmp#[app.component,PascalCase]#Filter.#[field]# ?[ablType=character]?<> ""?[end]??[ablType=integer]?> 0?[end]??[!ablType=character&!ablType=integer]?<> ??[end]?)
+        then oWhere:and("#[app.table]#.#[field]#", tmp#[app.component,PascalCase]#Filter.#[field]#?[ablType=character]?, oWhere:OPERATOR_BG?[end]?).
 
-        if  tmp#[Table.module]#Filter.ds-query <> ?
-        and tmp#[Table.module]#Filter.ds-query <> ""
+@[end]@
+@[app.fields,isFilter&isRangeFilter]@
+        if  (tmp#[app.component,PascalCase]#Filter.#[field]#-ini <> ?)
+        and (tmp#[app.component,PascalCase]#Filter.#[field]#-ini ?[ablType=character]?<> ""?[end]??[ablType=integer]?> 0?[end]??[!ablType=character&!ablType=integer]?<> ??[end]?)
+        then oWhere:and("#[app.table]#.#[field]#", tmp#[app.component,PascalCase]#Filter.#[field]#-ini, oWhere:OPERATOR_GE).
+        if  (tmp#[app.component,PascalCase]#Filter.#[field]#-fim <> ?)
+        and (tmp#[app.component,PascalCase]#Filter.#[field]#-fim ?[ablType=character]?<> ""?[end]??[ablType=integer]?> 0?[end]??[!ablType=character&!ablType=integer]?<> ??[end]?)
+        then oWhere:and("#[app.table]#.#[field]#", tmp#[app.component,PascalCase]#Filter.#[field]#-fim, oWhere:OPERATOR_LE).
+
+@[end]@
+        if  tmp#[app.component,PascalCase]#Filter.ds-query <> ?
+        and tmp#[app.component,PascalCase]#Filter.ds-query <> ""
         then do:
-            assign in-search-value-aux = integer(tmp#[Table.module]#Filter.ds-query) no-error.
+            assign in-search-value-aux = integer(tmp#[app.component,PascalCase]#Filter.ds-query) no-error.
             assign lg-value-integer-aux = not error-status:error.
 
             oWhere = oQuery:and().
-            #[whileFields,isFilter=true|isRangeFilter=false|databaseType=character]#
-            oWhere:or("#[Table.name]#.#[Field.fieldName]#", tmp#[Table.module]#Filter.ds-query, oWhere:OPERATOR_BG#[endIF]#).
-            #[endWhileFields]#
+@[app.fields,isFilter&!isRangeFilter&ablType=character]@
+            oWhere:or("#[app.table]#.#[field]#", tmp#[app.component,PascalCase]#Filter.ds-query, oWhere:OPERATOR_BG?[end]?).
+@[end]@
             if lg-value-integer-aux
             then do:
-                #[whileFields,isFilter=true|isRangeFilter=false|databaseType=integer]#
-                oWhere:or("#[Table.name]#.#[Field.fieldName]#", in-search-value-aux).
-                #[endWhileFields]#
+@[app.fields,isFilter&!isRangeFilter&ablType=integer]@
+                oWhere:or("#[app.table]#.#[field]#", in-search-value-aux).
+@[end]@
             end.
         end.  
     end.
@@ -114,12 +125,12 @@ end procedure.
 
 procedure createRecord:
     
-    define input-output param table for tmp#[Table.module]#.
+    define input-output param table for tmp#[app.component,PascalCase]#.
     define input-output param table for rowErrors.   
 
-    find first tmp#[Table.module]# no-error.
+    find first tmp#[app.component,PascalCase]# no-error.
 
-    if not avail tmp#[Table.module]#
+    if not avail tmp#[app.component,PascalCase]#
     then do:
         run insertOtherError(
             input 0,
@@ -132,11 +143,10 @@ procedure createRecord:
         return "NOK".
     end.
     
-    if can-find(first #[Table.name]#
-                #[whileFields,isKey=true]#   
-                #[IF,isFirst]#where #[endIF]##[IF,!isFirst]#  and #[endIF]##[Table.name]#.#[Field.fieldName]# = tmp#[Table.module]#.#[Field.fieldName]#
-                #[endWhileFields]#
-                      no-lock)
+    if can-find(first #[app.table]#
+@[app.fields,isPrimary]@
+                ?[isFirst]?where ?[end]??[!isFirst]?  and ?[end]?#[app.table]#.#[field]# = tmp#[app.component,PascalCase]#.#[field]#
+@[end]@)
     then do:
         run insertOtherError(input 0,
                              input "Registro com codigo informado ja existe",
@@ -149,12 +159,12 @@ procedure createRecord:
     end.
            
     run validateRecord (
-        input table tmp#[Table.module]#,
+        input table tmp#[app.component,PascalCase]#,
         input-output table rowErrors).                
     
     if return-value = "OK"
     then do:
-        create #[Table.name]#.    
+        create #[app.table]#.    
         run assignRecord no-error.
 
         if error-status:error
@@ -170,8 +180,8 @@ procedure createRecord:
             undo,return "NOK".
         end.
         else do:
-            find current #[Table.name]# no-lock no-error.
-            buffer-copy #[Table.name]# to tmp#[Table.module]#.
+            find current #[app.table]# no-lock no-error.
+            buffer-copy #[app.table]# to tmp#[app.component,PascalCase]#.
         end.
     end.        
 
@@ -179,12 +189,12 @@ end procedure.
 
 procedure updateRecord:
 
-    define input-output param table for tmp#[Table.module]#.
+    define input-output param table for tmp#[app.component,PascalCase]#.
     define input-output param table for rowErrors.   
 
-    find first tmp#[Table.module]# no-error.        
+    find first tmp#[app.component,PascalCase]# no-error.        
 
-    if not available tmp#[Table.module]#
+    if not available tmp#[app.component,PascalCase]#
     then do:
         run insertOtherError(
             input 0,
@@ -197,11 +207,10 @@ procedure updateRecord:
         return "NOK".
     end.
          
-    if not can-find(first #[Table.name]#
-                    #[whileFields,isKey=true]#   
-                    #[IF,isFirst]#where #[endIF]##[IF,!isFirst]#  and #[endIF]##[Table.name]#.#[Field.fieldName]# = tmp#[Table.module]#.#[Field.fieldName]#
-                    #[endWhileFields]#
-                    no-lock)
+    if not can-find(first #[app.table]#
+@[app.fields,isPrimary]@
+                    ?[isFirst]?where ?[end]??[!isFirst]?  and ?[end]?#[app.table]#.#[field]# = tmp#[app.component,PascalCase]#.#[field]#
+@[end]@)
     then do:
         run insertOtherError(
             input 0,
@@ -215,15 +224,15 @@ procedure updateRecord:
     end.
     
     run validateRecord (
-        input table tmp#[Table.module]#,
+        input table tmp#[app.component,PascalCase]#,
         input-output table rowErrors).
 
     if return-value = "OK"
     then do:
-        find first #[Table.name]# 
-            #[whileFields,isKey=true]#
-            #[IF,isFirst]#where#[endIF]##[IF,!isFirst]#  and #[endIF]# #[Table.name]#.#[Field.fieldName]# = tmp#[Table.module]#.#[Field.fieldName]# 
-            #[endWhileFields]#
+        find first #[app.table]# 
+@[app.fields,isPrimary]@
+            ?[isFirst]?where?[end]??[!isFirst]?  and?[end]? #[app.table]#.#[field]# = tmp#[app.component,PascalCase]#.#[field]#
+@[end]@
                   exclusive-lock no-error.
         run assignRecord no-error.
 
@@ -240,21 +249,21 @@ procedure updateRecord:
             undo,return "NOK".
         end.
         else do:
-            find current #[Table.name]# no-lock no-error.
-            buffer-copy #[Table.name]# to tmp#[Table.module]#.
+            find current #[app.table]# no-lock no-error.
+            buffer-copy #[app.table]# to tmp#[app.component,PascalCase]#.
         end.
     end.
 end.
 
 procedure validateRecord private:
-    define input        parameter table for tmp#[Table.module]#.
+    define input        parameter table for tmp#[app.component,PascalCase]#.
     define input-output parameter table for rowErrors.   
     
-    for first tmp#[Table.module]# no-lock:
-        #[whileFields,isRequired=true]#
-        #[IF,isFirst]#if#[endIF]##[IF,!isFirst]#or#[endIF]# tmp#[Table.module]#.#[Field.fieldName]# = ?
-        or tmp#[Table.module]#.#[Field.fieldName]# = #[IF,databaseType=character]#""#[endIF]##[IF,databaseType=logical]#?#[endIF]##[IF,!databaseType=character|!databaseType=logical]#0#[endIF]#
-        #[endWhileFields]#
+    for first tmp#[app.component,PascalCase]# no-lock:
+@[app.fields,isMandatory]@
+        ?[isFirst]?if?[end]??[!isFirst]?or?[end]? tmp#[app.component,PascalCase]#.#[field]# = ?
+        or tmp#[app.component,PascalCase]#.#[field]# = ?[ablType=character]?""?[end]??[ablType=logical]???[end]??[!ablType=character&!ablType=logical]?0?[end]?
+@[end]@
         then do:
             run insertOtherError(
                 input 0,
@@ -273,14 +282,14 @@ end procedure.
 
 procedure assignRecord private:   
     
-    buffer-copy tmp#[Table.module]#
-          using #[inlineFields,fixedValue=]##[Field.fieldName]# #[endInlineFields]#
-             to #[Table.name]#.
-    #[whileFields,!fixedValue=]#
-    #[IF,isFirst]#assign#[endIF]##[IF,!isFirst]#      #[endIF]# #[Table.name]#.#[Field.fieldName,MaxAttributeSize]# = #[Field.fixedValue]##[IF,isLast]#.#[endIF]#
-    #[endWhileFields]#
+    buffer-copy tmp#[app.component,PascalCase]#
+          using @[app.fields,ablFixedValue=]@#[field]# @[end]@
+             to #[app.table]#.
+@[app.fields,!ablFixedValue=]@
+    ?[isFirst]?assign?[end]??[!isFirst]?      ?[end]? #[app.table]#.#[field]# = #[ablFixedValue]#
+@[end]@.
 
-    validate #[Table.name]# no-error.
+    validate #[app.table]# no-error.
     if error-status:error
     then return error.
 
@@ -288,17 +297,15 @@ end procedure.
 
 procedure removeRecord:
     
-    #[whileFields,isKey=true]#
-    def input        param #[Field.fieldName]#-par like #[Table.name]#.#[Field.fieldName]#  no-undo.
-    #[endWhileFields]#
+@[app.fields,isPrimary]@
+    def input        param #[field]#-par like #[app.table]#.#[field]#  no-undo.
+@[end]@
     def input-output param table for rowErrors.  
     
-    if not can-find(first #[Table.name]#
-                    #[whileFields,isKey=true]#   
-                    #[IF,isFirst]#where #[endIF]##[IF,!isFirst]#  and #[endIF]##[Table.name]#.#[Field.fieldName]# = #[Field.fieldName]#-par 
-                    #[endWhileFields]#
-                          no-lock)
-                    
+    if not can-find(first #[app.table]#
+@[app.fields,isPrimary]@
+                    ?[isFirst]?where ?[end]??[!isFirst]?  and ?[end]?#[app.table]#.#[field]# = #[field]#-par 
+@[end]@)
     then do:
         run insertOtherError(
             input 0,
@@ -311,25 +318,25 @@ procedure removeRecord:
         return "NOK".
     end.
          
-    for first #[Table.name]# 
-        #[whileFields,isKey=true]#   
-        #[IF,isFirst]#where#[endIF]##[IF,!isFirst]#  and #[endIF]# #[Table.name]#.#[Field.fieldName]# = #[Field.fieldName]#-par
-        #[endWhileFields]#        
+    for first #[app.table]# 
+@[app.fields,isPrimary]@
+        ?[isFirst]?where?[end]??[!isFirst]?  and ?[end]? #[app.table]#.#[field]# = #[field]#-par
+@[end]@
               exclusive-lock:
-        delete #[Table.name]#.
+        delete #[app.table]#.
     end.
     
 end.
 
-procedure createTemp#[Table.module]#:
+procedure createTemp#[app.component,PascalCase]#:
 
-    create tmp#[Table.module]#.
-    buffer-copy #[Table.name]# to tmp#[Table.module]#.
+    create tmp#[app.component,PascalCase]#.
+    buffer-copy #[app.table]# to tmp#[app.component,PascalCase]#.
 
 end.
 
 procedure adjustSearchFields private:
-    def input-output param table for tmp#[Table.module]#Filter.
+    def input-output param table for tmp#[app.component,PascalCase]#Filter.
 
     // realiza tratamentos nos campos de pesquisa
     // exemplo: remover pontuacao do campo de CPF

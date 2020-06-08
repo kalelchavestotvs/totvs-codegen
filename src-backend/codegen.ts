@@ -1,13 +1,12 @@
 import path from "path"
 import fs from "fs"
 import config from "./config"
-import { TemplateFile, IApplication, TemplateFileData } from './model'
+import cache from "./cache"
+import { TemplateFile, IApplication } from './model'
 import { TemplateParser } from "./parser"
 
 let dataDirectory = path.join(__dirname, 'data')
 let templateDirectory = path.join(dataDirectory, 'template')
-let tableDirectory = path.join(dataDirectory, 'table')
-let appDirectory = path.join(dataDirectory, 'application')
 
 const fileReplicators = {
     enum: '+[enum]+',
@@ -25,9 +24,7 @@ function resultFolder(appName:string,sessionId:string): string {
 }
 
 function loadAppData(name:string): IApplication {
-    let fname = path.join(appDirectory,`${name}.json`)
-    let txt = fs.readFileSync(fname).toString();
-    return JSON.parse(txt)
+    return cache.application(name)
 }
 
 function buildTemplate(appData:any,outputPath:string,template:string): Promise<boolean> {
@@ -109,9 +106,10 @@ function parseFiles(list:TemplateFile[],appData:IApplication) {
         // replica zooms
         else if (item.inputFile.includes(fileReplicators.zoom)) {
             appData.zooms?.forEach(z => {
+                let zoomApp = Object.assign(loadAppData(z.application),z)
                 let newItem = Object.assign({},item)
                 newItem.outputFile = newItem.outputFile.replace(fileReplicators.zoom,'')
-                newItem.data = Object.assign(newItem.data,{zoom:z})
+                newItem.data = Object.assign(newItem.data,{zoom:zoomApp})
                 newItem.outputFile = templateParser.parseStr(newItem.outputFile,newItem.data)
                 result.push(newItem)
             })

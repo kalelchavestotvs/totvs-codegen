@@ -1,10 +1,10 @@
-import { Component, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, AfterContentInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RequestService } from '../../services/request.service';
 import { DataService } from '../../services/data.service';
 import { Table } from '../../models/table';
 import { LoadingComponent } from '../../components/loading/loading.component';
-import { PoComboOption, PoNotificationService, PoTableColumn, PoTableAction } from '@po-ui/ng-components';
+import { PoComboOption, PoNotificationService, PoTableColumn, PoTableAction, PoAccordionItemComponent } from '@po-ui/ng-components';
 import { Application, ApplicationField, ApplicationZoom, ApplicationEnum } from '../../models/application';
 import { Field } from '../../models/field';
 import { AvailableField, InsertedField, IApplicationRelation } from '../../models/model';
@@ -18,13 +18,15 @@ import { RelationAddComponent } from '../relation-add/relation-add.component';
   templateUrl: './application-edit.component.html',
   styleUrls: ['./application-edit.component.css']
 })
-export class ApplicationEditComponent implements AfterViewInit {
+export class ApplicationEditComponent implements AfterContentInit {
 
   //#region referencias
-  @ViewChild(LoadingComponent, {static:false}) loadingComponent: LoadingComponent;
+  @ViewChild(LoadingComponent, {static:true}) loadingComponent: LoadingComponent;
   @ViewChild('fieldEditComponent', {static:false}) fieldEditComponent: FieldEditComponent;
   @ViewChild('applicationNameComponent', {static:false}) applicationNameComponent: ApplicationNameComponent;
   @ViewChild('relationAddComponent', {static:false}) relationAddComponent: RelationAddComponent;
+  @ViewChild('accordionComponent', {static:false}) accordionComponent: PoAccordionItemComponent;
+  @ViewChild('accordionProperties', {static:false}) accordionProperties: PoAccordionItemComponent;
   //#endregion
 
   //#region inicializacao
@@ -38,12 +40,13 @@ export class ApplicationEditComponent implements AfterViewInit {
     private activatedRoute: ActivatedRoute
   ) { }
 
-  ngAfterViewInit() {
+  ngAfterContentInit() {
     this.init();
   }
   //#endregion
 
   //#region definicoes de tela
+  pageTitle;
   availableFieldsActions: PoTableAction[] = [
     { label: 'Adicionar', action: this.onAddFieldClick.bind(this) }
   ];
@@ -230,17 +233,22 @@ export class ApplicationEditComponent implements AfterViewInit {
   private init() {
     this.initTables().then(() => {
       if (this.activatedRoute.snapshot.paramMap.has('name')) {
-        this.editMode = 'edit';
         let appName = this.activatedRoute.snapshot.paramMap.get('name');
+        this.pageTitle = `Alterar aplicação - ${appName}`;
+        this.editMode = 'edit';
         let app = this.dataService.applications.find(item => item.name == appName);
         this.initModel(app);
         this.onTableChange();
+        this.changeDetectorRef.detectChanges();
+        this.accordionProperties.expand();
       }
       else {
+        this.pageTitle = 'Nova aplicação';
         this.editMode = 'add';
         this.initModel();
+        this.changeDetectorRef.detectChanges();
+        this.accordionComponent.expand();
       }
-      this.changeDetectorRef.detectChanges();
     });
   }
 
@@ -302,7 +310,7 @@ export class ApplicationEditComponent implements AfterViewInit {
   }
 
   private refreshAppFieldList() {
-    this.insertedFields = [...this.application.fields.map(item => this.mapInsertedField(item))];
+    this.insertedFields = this.application.fields?.map(item => this.mapInsertedField(item)) || [];
   }
 
   private mapAvailableField(value:Field): AvailableField {

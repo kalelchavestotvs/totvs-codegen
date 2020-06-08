@@ -3,6 +3,7 @@ import url from "url"
 import fs from "fs"
 import path from "path"
 import codeGen from "./codegen"
+import cache from "./cache"
 import { IApplication } from 'model'
 
 interface IResponse { status?:number, data?:Buffer|string }
@@ -47,44 +48,53 @@ let getTable = (table:string):Promise<IResponse> => {
     })
 }
 
-let getApplication = (table:string):Promise<IResponse> => {
+let getApplication = (name:string):Promise<IResponse> => {
+    let app = cache.application(name)
     return new Promise(resolve => {
-        let fname = path.join(appDirectory, `${table}.json`)
-        fs.readFile(fname, (err,data) => {
-            if (data)
-                resolve({status:200, data:data})
-            else
-                resolve({status:500, data:'500 Application not found'})
-        })
+        if (app)
+            resolve({status:200, data:JSON.stringify(app)})
+        else
+            resolve({status:500, data:'500 Application not found'})
     })
 }
 
 let searchApplication = (filter:string):Promise<IResponse> => {
+    let apps = cache.applications()
+    let result = []
+    let filterData: {table?,name?,q?} = {}
+    let filters = (filter?.split('&') || [])
+    filters.forEach(f => {
+        let v = f.split('=')
+        if (v.length == 2)
+            filterData[v[0]] = v[1]        
+    })
     return new Promise(resolve => {
-        let filters = (filter?.split('&') || [])
-        // filters.map(item => { return {  } })
-        fs.readdir(appDirectory,(err,files) => {
-            let resultFiles = [...files]
-            let result = []
-            // if (filter.name)
-            //     resultFiles = resultFiles.filter(item => item.startsWith(filter.name))
-
-            resultFiles.forEach(f => {
-                let strData = fs.readFileSync(path.join(appDirectory,f)).toString()
-                let objData: IApplication = JSON.parse(strData)
-
-                if ((filters['table'])&&(objData.table?.toLowerCase != filters['table'].toLowerCase()))
+        apps.forEach(app => {
+            if (filterData.name) {
+                if (app.name != filterData.name)
                     return
-
-                result.push(objData)
-            })
-
-            resolve({status:200, data: JSON.stringify({ items: result })})
+            }
+            if (filterData.table) {
+                if (app.table != filterData.table)
+                    return
+            }
+            if (filterData.q) {
+                let ok = false
+                if (app.table == filterData.q)
+                    ok = true
+                if (app.name == filterData.q)
+                    ok = true
+                if (!ok)
+                    return
+            }
+            result.push(app)
         })
+        resolve({status:200, data: JSON.stringify(result)})
     })
 }
 
 let createApplication = (data?:string):Promise<IResponse> => {
+    cache.reset()
     return new Promise(resolve => {
         try {
             let appData: IApplication = {}
@@ -108,6 +118,7 @@ let createApplication = (data?:string):Promise<IResponse> => {
 }
 
 let updateApplication = (name:string,data?:string):Promise<IResponse> => {
+    cache.reset()
     return new Promise(resolve => {
         try {
             let appData: IApplication = {}
