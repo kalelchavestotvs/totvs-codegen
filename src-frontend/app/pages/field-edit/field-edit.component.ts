@@ -18,8 +18,9 @@ export class FieldEditComponent {
   valueOptions: PoCheckboxGroupOption[] = [
     { value: 'isPrimary', label: 'Chave Primária' },
     { value: 'isMandatory', label: 'Obrigatório' },
-    { value: 'isVisible', label: 'Visível' },
     { value: 'isEditable', label: 'Editável' },
+    { value: 'isAuto', label: 'Auto-incremento' },
+    { value: 'isVisible', label: 'Visível' },
     { value: 'isListed', label: 'Listado em grid' },
     { value: 'isLink', label: 'Link' },
     { value: 'isFilter', label: 'Filtro' },

@@ -2,8 +2,6 @@ import fs from "fs"
 import path from "path"
 import { IApplication } from 'model'
 
-interface IConfig { ready:boolean, outputPath?:string, sharedPath?:string }
-
 let dataDirectory = path.join(__dirname, 'data')
 let appDirectory = path.join(dataDirectory, 'application')
 
@@ -30,7 +28,7 @@ function dirScan(inputFolder:string): IApplication[] {
 }
 
 function refreshCacheApps() {
-    console.log('Refresh cache applications')
+    console.log('Refresh cached applications')
     cacheApps = dirScan(appDirectory)
 }
 
@@ -43,7 +41,8 @@ const cache = {
     application: (name) => {
         if (!cacheApps)
             refreshCacheApps()
-        return cacheApps[name]
+        // realiza copia sem referencias ao objeto em cache
+        return JSON.parse(JSON.stringify(cacheApps[name]))
     },
     reset: () => {
         console.log('Cache reset')

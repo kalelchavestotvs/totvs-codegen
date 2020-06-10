@@ -45,6 +45,7 @@ export interface IFieldProperties {
   isMandatory?:boolean;
   isVisible?:boolean;
   isEditable?:boolean;
+  isAuto?:boolean;
   isListed?:boolean;
   isLink?:boolean;
   isFilter?:boolean;
@@ -70,6 +71,7 @@ export class ApplicationField implements IFieldProperties {
   isMandatory:boolean;
   isVisible:boolean;
   isEditable:boolean;
+  isAuto:boolean;
   isListed:boolean;
   isLink:boolean;
   isFilter:boolean;

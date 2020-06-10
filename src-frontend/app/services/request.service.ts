@@ -16,6 +16,7 @@ export class RequestService {
   private readonly URL_APPLICATION = `${this.URL}/application`;
   private readonly URL_APPLICATION_KEY = `${this.URL_APPLICATION}/{{name}}`;
   private readonly URL_GENERATE = `${this.URL}/generate`;
+  private readonly URL_RELATION = `${this.URL}/relation`;
 
   getTables(): Promise<TableIndex> {
     return ZikiHttpServices
@@ -68,5 +69,13 @@ export class RequestService {
     return ZikiHttpServices
       .getInstance<GenerateResult>(GenerateResult, this.URL_GENERATE)
       .post(_model);
+  }
+
+  searchRelation(fieldName:string): Promise<Application[]> {
+    let _model = { field: fieldName };
+    return ZikiHttpServices
+      .getInstance<Application[]>(Application, this.URL_RELATION)
+      .setQueryParams(_model)
+      .get();
   }
 }

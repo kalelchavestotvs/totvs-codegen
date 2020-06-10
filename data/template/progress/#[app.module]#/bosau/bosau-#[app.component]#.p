@@ -13,6 +13,17 @@ this-procedure:private-data = "bosau-#[app.component]#".
 {rtp/rtrowerror.i}
 {#[app.module]#/bosau/bosau-#[app.component]#.i}
 
+@[app.fields,isAuto]@
+?[isFirst]?
+function nextSequence returns #[ablType]#:
+    def buffer b-#[app.table]# for #[app.table]#.
+    for first b-#[app.table]# no-lock break by b-#[app.table]#.#[field]# desc:
+        return b-#[app.table]#.#[field]# + 1.
+    end.
+    return 1.
+end function.
+?[end]?
+@[end]@
 function validateSearchFilter returns log (buffer bf#[app.component,PascalCase]#Filter for tmp#[app.component,PascalCase]#Filter):
     // valida o minimo de informacoes no filtro
     return true.
@@ -97,7 +108,7 @@ procedure getByFilter:
 
             oWhere = oQuery:and().
 @[app.fields,isFilter&!isRangeFilter&ablType=character]@
-            oWhere:or("#[app.table]#.#[field]#", tmp#[app.component,PascalCase]#Filter.ds-query, oWhere:OPERATOR_BG?[end]?).
+            oWhere:or("#[app.table]#.#[field]#", tmp#[app.component,PascalCase]#Filter.ds-query, oWhere:OPERATOR_BG).
 @[end]@
             if lg-value-integer-aux
             then do:
@@ -142,7 +153,11 @@ procedure createRecord:
             input-output table rowErrors).
         return "NOK".
     end.
-    
+@[app.fields,isAuto]@
+?[isFirst]?
+    assign tmp#[app.component,PascalCase]#.#[field]# = nextSequence().
+?[end]?
+@[end]@
     if can-find(first #[app.table]#
 @[app.fields,isPrimary]@
                 ?[isFirst]?where ?[end]??[!isFirst]?  and ?[end]?#[app.table]#.#[field]# = tmp#[app.component,PascalCase]#.#[field]#
@@ -260,7 +275,7 @@ procedure validateRecord private:
     define input-output parameter table for rowErrors.   
     
     for first tmp#[app.component,PascalCase]# no-lock:
-@[app.fields,isMandatory]@
+@[app.fields,isMandatory&ablFixedValue=&!isAuto]@
         ?[isFirst]?if?[end]??[!isFirst]?or?[end]? tmp#[app.component,PascalCase]#.#[field]# = ?
         or tmp#[app.component,PascalCase]#.#[field]# = ?[ablType=character]?""?[end]??[ablType=logical]???[end]??[!ablType=character&!ablType=logical]?0?[end]?
 @[end]@

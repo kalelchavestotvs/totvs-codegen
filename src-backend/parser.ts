@@ -18,8 +18,10 @@ function _plural(attr:PropertyValue): PropertyValue {
     if (!attr) return null
     if (attr.value.endsWith('y'))
         attr.value = attr.value.substring(0,attr.value.length-1) + 'ies'
+    else if (attr.value.endsWith('ss'))
+        attr.value += 'es'
     else if (!attr.value.match(/[0-9s]$/gi))
-        attr.value = attr.value + 's'
+        attr.value += 's'
     return attr
 }
 
@@ -49,13 +51,24 @@ function _ablCast(attr:PropertyValue): PropertyValue {
     return attr
 }
 
+function _negate(attr:PropertyValue): PropertyValue {
+    if (!attr) return null
+    let v = !!attr.value
+    if (v)
+        attr.value = 'false'
+    else
+        attr.value = 'true'
+    return attr
+}
+
 const convertFunctions = {
     pascalcase: _pascalCase.bind(this),
     camelcase: _camelCase.bind(this),
     plural: _plural.bind(this),
     upper: _upper.bind(this),
     lower: _lower.bind(this),
-    ablcast: _ablCast.bind(this)
+    ablcast: _ablCast.bind(this),
+    negate: _negate.bind(this)
 }
 
 const specialChars = {
@@ -106,9 +119,15 @@ export class TemplateParser {
                         loopItem.isLast = (i == a.length-1)
                         loopItem.isOdd = (i % 2 == 1)
                         loopItem.isEven = (i % 2 == 1)
-
+                        let loopData = Object.assign({},data,{item:loopItem})
+                        // inject enumComponent
+                        if (loopItem.enumComponent)
+                            loopData.enum = data.app.enums?.find(item => item.component == loopItem.enumComponent)
+                        // inject zoomComponent
+                        if (loopItem.zoomComponent)
+                            loopData.zoom = data.app.zooms?.find(item => item.application == loopItem.zoomComponent)
                         let text = this.insertLineBreakers(lineBreakers, loopItem.isFirst, loopItem.isLast)
-                        replaceText += this.parseStr(text,Object.assign({},data,{item:loopItem}))
+                        replaceText += this.parseStr(text,loopData)
                     })
                 }
                 
@@ -221,6 +240,8 @@ export class TemplateParser {
                 negated = true
             }
             let attrValue = this.applyAttributeValue(params[0].trim(),data)
+            if (!attrValue)
+                return false
             if (attrValue.value == null)
                 attrValue.value = ''
             if (params.length==1) {
@@ -262,7 +283,7 @@ export class TemplateParser {
                 case 'zoom':
                     return { value: data.zoom[attrName], data: data, attribute: 'zoom', property: attrName }
                 default:
-                    return null;
+                    return null
             }
         }
         else if((args.length==1)&&(data.item)) {

@@ -27,7 +27,18 @@ function loadAppData(name:string): IApplication {
     return cache.application(name)
 }
 
+function prepareApplicationData(appData:IApplication) {
+    appData.zooms?.forEach(z => {
+        let flist:string[] = [...<string[]>z.fields || []]
+        let app = loadAppData(z.application)
+        let zoomApp = Object.assign({},app,z,{fields:[]})
+        zoomApp.fields = app.fields?.filter(item => flist.includes(item.name))
+        Object.assign(z,zoomApp)
+    })
+}
+
 function buildTemplate(appData:any,outputPath:string,template:string): Promise<boolean> {
+    prepareApplicationData(appData)
     let files = readTemplateDirectory(template,outputPath)
     files = parseFiles(files, appData)
 
@@ -98,7 +109,7 @@ function parseFiles(list:TemplateFile[],appData:IApplication) {
             appData.enums?.forEach(e => {
                 let newItem = Object.assign({},item)
                 newItem.outputFile = newItem.outputFile.replace(fileReplicators.enum,'')
-                newItem.data = Object.assign(newItem.data,{enum:e})
+                newItem.data = Object.assign({},newItem.data,{enum:e})
                 newItem.outputFile = templateParser.parseStr(newItem.outputFile,newItem.data)
                 result.push(newItem)
             })
@@ -106,10 +117,10 @@ function parseFiles(list:TemplateFile[],appData:IApplication) {
         // replica zooms
         else if (item.inputFile.includes(fileReplicators.zoom)) {
             appData.zooms?.forEach(z => {
-                let zoomApp = Object.assign(loadAppData(z.application),z)
+                let zoomApp = Object.assign({},loadAppData(z.application),z)
                 let newItem = Object.assign({},item)
                 newItem.outputFile = newItem.outputFile.replace(fileReplicators.zoom,'')
-                newItem.data = Object.assign(newItem.data,{zoom:zoomApp})
+                newItem.data = Object.assign({},newItem.data,{zoom:zoomApp})
                 newItem.outputFile = templateParser.parseStr(newItem.outputFile,newItem.data)
                 result.push(newItem)
             })
@@ -128,7 +139,7 @@ const codeGen = {
     
     generate: (appName:string,sessionId:string,templates:string[]): Promise<string> => {
         let _results: Promise<boolean>[] = []
-        let _appData = loadAppData(appName)
+        let _appData = Object.assign({},loadAppData(appName))
         let _folder = prepareFolder(appName,sessionId)
         templates.forEach(template => _results.push(buildTemplate(_appData,_folder,template)))
         return Promise.all(_results).then(() => resultFolder(appName,sessionId))

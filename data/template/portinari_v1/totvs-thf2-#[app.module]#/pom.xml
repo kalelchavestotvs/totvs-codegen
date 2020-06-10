@@ -1,0 +1,12 @@
+ESTE ARQUIVO DEVE SER ADCIONADO AO POM DO PROJETO DENTRO DA TAG <executions>
+
+
+<execution>
+	<id>npm build #[app.component]#</id>
+	<goals>
+		<goal>npm</goal>
+	</goals>
+	<configuration>
+		<arguments>run build -- #[app.component]#</arguments>
+	</configuration>
+</execution>

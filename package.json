@@ -6,14 +6,14 @@
     "build:backend": "tsc -p ./src-backend",
     "build:data": "xcopy .\\data\\* .\\dist\\data\\  /y /s",
     "build:installation": "xcopy .\\src-backend\\package.json .\\dist\\ /y /s && xcopy .\\src-backend\\*.bat .\\dist\\ /y /s",
-    "build": "npm run build:backend && npm run build:installation && npm run build:frontend && npm run build:data && npm run build:bin",
+    "build": "npm run build:backend && npm run build:installation && npm run build:frontend",
     "serve": "node ./dist/entry.js",
     "prod": "npm run build && npm run serve",
     "dev:backendOLD": "nodemon --watch \"src-backend/\" --exec \"ts-node src-backend/entry.ts\" -e ts",
     "dev:backend": "nodemon --watch \"src-backend/\" --exec \"npm run build:backend && npm run serve\" -e ts",
     "dev:frontend": "ng build frontend --watch",
     "dev:data": "xcopy .\\data\\* .\\dist\\data\\  /y /s",
-    "dev": "npm run dev:data & npm run dev:backend & npm run dev:frontend & npm run serve"
+    "dev": "npm run dev:backend & npm run dev:frontend"
   },
   "private": true,
   "main": "index.js",
@@ -31,8 +31,8 @@
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "uuid": "^8.1.0",
-    "ziki-http-services": "1.0.0-beta1",
-    "ziki-ng-utils": "1.0.0-beta1",
+    "ziki-http-services": "1.0.0",
+    "ziki-ng-utils": "1.0.0",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {

@@ -4,7 +4,7 @@ import { RequestService } from '../../services/request.service';
 import { DataService } from '../../services/data.service';
 import { Table } from '../../models/table';
 import { LoadingComponent } from '../../components/loading/loading.component';
-import { PoComboOption, PoNotificationService, PoTableColumn, PoTableAction, PoAccordionItemComponent } from '@po-ui/ng-components';
+import { PoComboOption, PoNotificationService, PoTableColumn, PoTableAction, PoAccordionItemComponent, PoDialogService } from '@po-ui/ng-components';
 import { Application, ApplicationField, ApplicationZoom, ApplicationEnum } from '../../models/application';
 import { Field } from '../../models/field';
 import { AvailableField, InsertedField, IApplicationRelation } from '../../models/model';
@@ -35,6 +35,7 @@ export class ApplicationEditComponent implements AfterContentInit {
     private dataService: DataService,
     private typeTranslateService: TypeTranslateService,
     private notificationService: PoNotificationService,
+    private dialogService: PoDialogService,
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private activatedRoute: ActivatedRoute
@@ -113,6 +114,7 @@ export class ApplicationEditComponent implements AfterContentInit {
           this.application.name = value;
           this.requestService.createApplication(this.application).then(() => {
             this.dataService.applications.push(this.application);
+            this.notificationService.success(`Aplicação ${this.application.name} criada com sucesso!`);
             this.router.navigate(['']);
           })
         }
@@ -122,14 +124,14 @@ export class ApplicationEditComponent implements AfterContentInit {
       this.requestService.updateApplication(this.application).then(() => {
         let app = this.dataService.applications.find(item => item.name == this.application.name);
         Object.assign(app, this.application);
+        this.notificationService.success(`Aplicação ${this.application.name} alterada com sucesso!`);
         this.router.navigate(['']);
       });
     }
-    
   }
 
   onAddRelationClick() {
-    this.relationAddComponent.add().then(value => {
+    return this.relationAddComponent.add().then(value => {
       if (value instanceof ApplicationEnum) {
         if (!this.application.enums)
           this.application.enums = [];
@@ -142,11 +144,12 @@ export class ApplicationEditComponent implements AfterContentInit {
         this.application.zooms.push(value);
         this.refreshEnumZoomList();
       }
+      return value;
     });
   }
 
   onEditRelationClick(relation:IApplicationRelation) {
-    this.relationAddComponent.edit(relation.data).then(value => {
+    return this.relationAddComponent.edit(relation.data).then(value => {
       // renomeia campos que usam esse relacionamento para o novo nome
       if (value instanceof ApplicationEnum)
         this.application.fields.filter(item => item.enumComponent == relation.name).forEach(item => item.enumComponent = value.component);
@@ -159,6 +162,7 @@ export class ApplicationEditComponent implements AfterContentInit {
       else if (value instanceof ApplicationZoom)
         relation.name = value.application;
       this.refreshEnumZoomList();
+      return value;
     });
   }
 
@@ -194,8 +198,8 @@ export class ApplicationEditComponent implements AfterContentInit {
 
     let relations = [...(this.application.enums || []),...(this.application.zooms || [])];
 
-    this.fieldEditComponent.edit(result, relations)
-      .then(value => {
+    let _edit = (f,r) => {
+      this.fieldEditComponent.edit(f, r).then(value => {
         if (value) {
           if (!this.application.fields)
             this.application.fields = [];
@@ -205,6 +209,47 @@ export class ApplicationEditComponent implements AfterContentInit {
           this.refreshAppFieldList();
         }
       });
+    }
+
+    // verifica se possui uma aplicacao que sirva como zoom para o campo
+    this.loadingComponent.show('Verificando campo...');
+    this.requestService.searchRelation(field.name)
+      .then(value => {
+        this.loadingComponent.hide();
+        if (value.length > 0) {
+          let _relation = this.application.zooms?.find(item => value.find(a => a.name == item.application));
+          if (_relation) {
+            result.zoomComponent = _relation.application;
+            _edit(result, relations);
+          }
+          else {
+            this.dialogService.confirm({
+              title: 'Relacionamento',
+              message: 'Encontrado uma aplicação relacionada a este campo. Deseja incluir um Zoom para esta aplicação?',
+              confirm: () => {
+                let _zoom = new ApplicationZoom();
+                _zoom.application = value[0].name;
+                this.relationAddComponent.edit(_zoom).then((z:ApplicationZoom) => {
+                  if (z) {
+                    if (!this.application.zooms)
+                      this.application.zooms = [];
+                    this.application.zooms.push(z);
+                    this.refreshEnumZoomList();
+                    result.zoomComponent = z.application;
+                    relations.push(z);
+                    _edit(result, relations);
+                  }
+                });
+              },
+              cancel: () => { _edit(result, relations) }
+            })
+          }
+        }
+        else {
+          _edit(result, relations);
+        }
+      })
+      .catch(() => this.loadingComponent.hide());
   }
 
   onEditFieldClick(field:InsertedField) {
@@ -332,6 +377,7 @@ export class ApplicationEditComponent implements AfterContentInit {
     // PK
     if (this.selectedTable.indexes?.find(item => item.primary && item.fields.includes(field.field)))
       field.isPrimary = true;
+    field.isMandatory = field.isPrimary;
     field.isEditable = !field.isPrimary;
     field.isVisible = true;
     field.isListed = true;

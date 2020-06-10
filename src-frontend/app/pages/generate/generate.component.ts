@@ -3,6 +3,7 @@ import { PoModalComponent, PoCheckboxGroupOption, PoModalAction, PoNotificationS
 import { Application } from '../../models/application';
 import { DataService } from '../../services/data.service';
 import { RequestService } from '../../services/request.service';
+import { copyTextToClipboard } from 'ziki-ng-utils';
 
 @Component({
   selector: 'generate',
@@ -73,8 +74,11 @@ export class GenerateComponent {
     return new Promise(resolve =>  {
       _service.generate(_app, _templates, _session)
         .then(value => {
-          // TotvsStringUtils.getInstance().copyTextToClipboard(value.outputPath);
-          _notificationService.success(`Aplicação gerada em ${value.outputPath}`);
+          _notificationService.success({ 
+            message: `Aplicação gerada em ${value.outputPath}`,
+            actionLabel: 'Copiar',
+            action: () => { copyTextToClipboard(value.outputPath) }
+          });
           resolve(true);
         })
         .catch(() => resolve(false))

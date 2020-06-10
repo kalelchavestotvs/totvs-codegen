@@ -1,0 +1,18 @@
+<gps-page-detail 
+    #gpsPageDetail
+    p-title="#[app.description]#"
+    (p-back)="onBack()"
+    (p-edit)="onEdit()"
+    (p-remove)="onRemove()">
+    <ng-container *ngIf="data">
+        <div class="po-row">
+@[app.fields]@
+            <po-info
+                class="po-md-6"
+                p-label="#[description]#"        
+                [p-value]="data.?[!zoomComponent=]?$?[end]??[!enumComponent=]?$?[end]?#[name]#?[!zoomComponent=]?Description?[end]??[!enumComponent=]?Description?[end]??[ablType=date&zoomComponent=&enumComponent=]? | date:'dd/MM/yyyy'?[end]??[ablType=logical&zoomComponent=&enumComponent=]? | boolean?[end]?">
+            </po-info>
+@[end]@
+        </div>
+    </ng-container>
+</gps-page-detail>

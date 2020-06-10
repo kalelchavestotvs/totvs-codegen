@@ -4,6 +4,7 @@ import fs from "fs"
 import path from "path"
 import codeGen from "./codegen"
 import cache from "./cache"
+import * as util from "./util"
 import { IApplication } from 'model'
 
 interface IResponse { status?:number, data?:Buffer|string }
@@ -93,6 +94,36 @@ let searchApplication = (filter:string):Promise<IResponse> => {
     })
 }
 
+let searchRelation = (filter:string):Promise<IResponse> => {
+    let apps = cache.applications()
+    let result = []
+    let filterData: {field?} = {}
+    let filters = (filter?.split('&') || [])
+    filters.forEach(f => {
+        let v = f.split('=')
+        if (v.length == 2)
+            filterData[v[0]] = v[1]        
+    })
+    if (filterData.field)
+        filterData.field = util.summaryName(filterData.field)
+    return new Promise(resolve => {
+        apps.forEach(app => {
+            let ok = false
+            if (filterData.field) {
+                let pk = app.fields.filter(f => f.isPrimary)
+                if (pk.length == 1) {
+                    let fname = util.summaryName(pk[0].field)
+                    if (util.compareNames(fname,filterData.field))
+                        ok = true
+                }
+            }
+            if (ok)
+                result.push(app)
+        })
+        resolve({status:200, data: JSON.stringify(result)})
+    })
+}
+
 let createApplication = (data?:string):Promise<IResponse> => {
     cache.reset()
     return new Promise(resolve => {
@@ -103,13 +134,23 @@ let createApplication = (data?:string):Promise<IResponse> => {
             else
                 throw "500";
             //
-            let applicationName = appData.name
-            let fname = path.join(appDirectory,`${applicationName}.json`)
-            fs.writeFile(fname,data,(err) => {
-                if (err)
-                    throw "500"
-                resolve({status:200, data:JSON.stringify(appData)})
-            })
+            if (validateApplication(appData)) {
+                let applicationName = appData.name
+                let fname = path.join(appDirectory,`${applicationName}.json`)
+                fs.exists(fname, (exist) => {
+                    if (exist)
+                        resolve({status:500, data:'Application already exists'})
+                    else 
+                        fs.writeFile(fname,data,(err) => {
+                            if (err)
+                                throw "500"
+                            resolve({status:200, data:JSON.stringify(appData)})
+                        })
+                })
+            }
+            else {
+                throw "500"
+            }
         } 
         catch {
             resolve({status:500, data:'500 - Application data error'})
@@ -128,13 +169,18 @@ let updateApplication = (name:string,data?:string):Promise<IResponse> => {
                 throw "500";
             //
             appData.name = name
-            let applicationName = appData.name
-            let fname = path.join(appDirectory,`${applicationName}.json`)
-            fs.writeFile(fname,data,(err) => {
-                if (err)
-                    throw "500"
-                resolve({status:200, data:JSON.stringify(appData)})
-            })
+            if (validateApplication(appData)) {
+                let applicationName = appData.name
+                let fname = path.join(appDirectory,`${applicationName}.json`)
+                fs.writeFile(fname,data,(err) => {
+                    if (err)
+                        throw "500"
+                    resolve({status:200, data:JSON.stringify(appData)})
+                })
+            }
+            else {
+                throw "500"
+            }
         } 
         catch {
             resolve({status:500, data:'500 - Application data error'})
@@ -173,6 +219,18 @@ let postGenerate = (data?:string):Promise<IResponse> => {
     })
 }
 
+let validateApplication = (app:IApplication): boolean => {
+    if (!app)
+        return false
+    if (!app.component)
+        return false
+    if (!app.description)
+        return false
+    if (!app.fields?.length)
+        return false
+    return true
+}
+
 var apiServer = {
     request: (req: http.IncomingMessage, res: http.ServerResponse, data?: string) => {
         try {
@@ -182,8 +240,16 @@ var apiServer = {
             let methodPath = stringPath.split('/').slice(2)
 
             let writeResponse = (response:IResponse) => {
-                res.writeHead(response.status || 204, { "Content-Type": "application/json" })
-                res.write(response.data)
+                let rData = response.data
+                res.writeHead(response.status || 204, { 'Content-Type': 'application/json' })
+                if ((response.status > 299)&&(rData)) {
+                    rData = JSON.stringify({
+                        'code': 'CODEGEN',
+                        'message': rData,
+                        'detailedMessage': ''
+                    })
+                }
+                res.write(rData)
                 res.end()
             }
 
@@ -198,8 +264,11 @@ var apiServer = {
                     case 'application':
                         searchApplication(requestUrl.query).then(v => writeResponse(v))
                         break
+                    case 'relation':
+                        searchRelation(requestUrl.query).then(v => writeResponse(v))
+                        break
                     default:
-                        throw "Not found"
+                        throw 'Not found'
                 }
             }
             else if ((req.method == 'POST')&&(methodPath.length == 1)) {
@@ -211,7 +280,7 @@ var apiServer = {
                         postGenerate(data).then(v => writeResponse(v))
                         break
                     default:
-                        throw "Not found"
+                        throw 'Not found'
                 }
             }
             else if ((req.method == 'GET')&&(methodPath.length == 2)) {
@@ -223,7 +292,7 @@ var apiServer = {
                         getApplication(methodPath[1]).then(v => writeResponse(v))
                         break
                     default:
-                        throw "Not found"
+                        throw 'Not found'
                 }
             }
             else if ((req.method == 'PUT')&&(methodPath.length == 2)) {
@@ -232,12 +301,12 @@ var apiServer = {
                         updateApplication(methodPath[1],data).then(v => writeResponse(v))
                         break
                     default:
-                        throw "Not found"
+                        throw 'Not found'
                 }
             }
             else {
-                res.writeHead(404, { "Content-Type": "text/plain" })
-                res.write("404 Not Found\n")
+                res.writeHead(404, { 'Content-Type': 'text/plain' })
+                res.write('404 Not Found\n')
                 res.end()
                 return
             }

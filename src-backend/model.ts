@@ -24,6 +24,7 @@ export interface IField {
     isMandatory?:boolean
     isVisible?:boolean
     isEditable?:boolean
+    isAuto?:boolean
     isListed?:boolean
     isLink?:boolean
     isFilter?:boolean
@@ -47,6 +48,7 @@ export interface IZoom {
     labelField?:string
     keyField?:string
     isNumeric?:boolean
+    fields?:string[] | IField[]
 }
 
 export interface PropertyValue {
