@@ -4,7 +4,7 @@ import fs from "fs"
 import path from "path"
 import codeGen from "./codegen"
 import cache from "./cache"
-import * as util from "./util"
+import * as dataUtil from "./data-util"
 import { IApplication } from 'model'
 
 interface IResponse { status?:number, data?:Buffer|string }
@@ -105,15 +105,15 @@ let searchRelation = (filter:string):Promise<IResponse> => {
             filterData[v[0]] = v[1]        
     })
     if (filterData.field)
-        filterData.field = util.summaryName(filterData.field)
+        filterData.field = dataUtil.summaryName(filterData.field)
     return new Promise(resolve => {
         apps.forEach(app => {
             let ok = false
             if (filterData.field) {
                 let pk = app.fields.filter(f => f.isPrimary)
                 if (pk.length == 1) {
-                    let fname = util.summaryName(pk[0].field)
-                    if (util.compareNames(fname,filterData.field))
+                    let fname = dataUtil.summaryName(pk[0].field)
+                    if (dataUtil.compareNames(fname,filterData.field))
                         ok = true
                 }
             }

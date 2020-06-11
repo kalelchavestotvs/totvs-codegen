@@ -1,0 +1,17 @@
+<po-modal
+  #modal
+  p-hide-close
+  p-click-out="false"
+  [p-title]="title">
+  <form class="po-row">
+    <po-table 
+      #listTable
+      class="po-md-12"
+      p-hide-text-overflow
+      p-selectable
+      p-single-select
+      [p-columns]="listColumns"
+      [p-items]="listItems">
+    </po-table>
+  </form>
+</po-modal>

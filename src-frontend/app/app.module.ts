@@ -11,6 +11,7 @@ import { ZikiHttpServicesModule } from "ziki-http-services";
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoadingComponent } from './components/loading/loading.component';
+import { ListSelectorComponent } from './components/list-selector/list-selector.component';
 
 import { MenuComponent } from './pages/menu/menu.component';
 import { ApplicationEditComponent } from './pages/application-edit/application-edit.component';
@@ -48,7 +49,8 @@ const services = [
     GenerateComponent,
     RelationAddComponent,
     EnumEditComponent,
-    ZoomEditComponent
+    ZoomEditComponent,
+    ListSelectorComponent
   ],
   imports: [
     ...modules

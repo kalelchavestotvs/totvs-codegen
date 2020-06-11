@@ -12,6 +12,7 @@ import { FieldEditComponent } from '../field-edit/field-edit.component';
 import { TypeTranslateService } from '../../services/type-translate.service';
 import { ApplicationNameComponent } from '../application-name/application-name.component';
 import { RelationAddComponent } from '../relation-add/relation-add.component';
+import { ListSelectorComponent } from '../../components/list-selector/list-selector.component';
 
 @Component({
   selector: 'app-application-edit',
@@ -25,6 +26,7 @@ export class ApplicationEditComponent implements AfterContentInit {
   @ViewChild('fieldEditComponent', {static:false}) fieldEditComponent: FieldEditComponent;
   @ViewChild('applicationNameComponent', {static:false}) applicationNameComponent: ApplicationNameComponent;
   @ViewChild('relationAddComponent', {static:false}) relationAddComponent: RelationAddComponent;
+  @ViewChild('listSelectorComponent', {static:false}) listSelectorComponent: ListSelectorComponent;
   @ViewChild('accordionComponent', {static:false}) accordionComponent: PoAccordionItemComponent;
   @ViewChild('accordionProperties', {static:false}) accordionProperties: PoAccordionItemComponent;
   //#endregion
@@ -227,19 +229,40 @@ export class ApplicationEditComponent implements AfterContentInit {
               title: 'Relacionamento',
               message: 'Encontrado uma aplicação relacionada a este campo. Deseja incluir um Zoom para esta aplicação?',
               confirm: () => {
-                let _zoom = new ApplicationZoom();
-                _zoom.application = value[0].name;
-                this.relationAddComponent.edit(_zoom).then((z:ApplicationZoom) => {
-                  if (z) {
-                    if (!this.application.zooms)
-                      this.application.zooms = [];
-                    this.application.zooms.push(z);
-                    this.refreshEnumZoomList();
-                    result.zoomComponent = z.application;
-                    relations.push(z);
-                    _edit(result, relations);
-                  }
-                });
+                if (value.length == 1) {
+                  let _zoom = new ApplicationZoom();
+                  _zoom.application = value[0].name;
+                  this.relationAddComponent.edit(_zoom).then((z:ApplicationZoom) => {
+                    if (z) {
+                      if (!this.application.zooms)
+                        this.application.zooms = [];
+                      this.application.zooms.push(z);
+                      this.refreshEnumZoomList();
+                      result.zoomComponent = z.application;
+                      relations.push(z);
+                      _edit(result, relations);
+                    }
+                  });
+                }
+                else {
+                  this.listSelectorComponent.select(value, 'name').then(selected => {
+                    if (selected) {
+                      let _zoom = new ApplicationZoom();
+                      _zoom.application = selected.name;
+                      this.relationAddComponent.edit(_zoom).then((z:ApplicationZoom) => {
+                        if (z) {
+                          if (!this.application.zooms)
+                            this.application.zooms = [];
+                          this.application.zooms.push(z);
+                          this.refreshEnumZoomList();
+                          result.zoomComponent = z.application;
+                          relations.push(z);
+                          _edit(result, relations);
+                        }
+                      });
+                    }
+                  });
+                }
               },
               cancel: () => { _edit(result, relations) }
             })
