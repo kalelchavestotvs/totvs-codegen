@@ -22,7 +22,7 @@
 @[app.fields,isFilter]@
 ?[!zoomComponent=&!isRangeFilter]?
         <po-lookup
-          name="filter#[name]#"
+          name="filter#[name,PascalCase]#"
           class="po-md-12"
           p-label="#[description]#"
           [p-columns]="#[zoom.component,camelCase]#Zoom.COLUMNS"
@@ -34,7 +34,7 @@
         </po-lookup>
 ?[end]??[!zoomComponent=&isRangeFilter]?
         <po-lookup
-          name="filter#[name]#Initial"
+          name="filter#[name,PascalCase]#Initial"
           class="po-md-6"
           p-label="#[description]# Inicial"
           [p-columns]="#[zoom.component,camelCase]#Zoom.COLUMNS"
@@ -45,7 +45,7 @@
           [(ngModel)]="filter.#[name]#Initial">
         </po-lookup>
         <po-lookup
-          name="filter#[name]#Final"
+          name="filter#[name,PascalCase]#Final"
           class="po-md-6"
           p-label="#[description]# Final"
           [p-columns]="#[zoom.component,camelCase]#Zoom.COLUMNS"
@@ -57,7 +57,7 @@
         </po-lookup>
 ?[end]??[!enumComponent=&!isRangeFilter]?
         <po-select
-          name="filter#[name]#"
+          name="filter#[name,PascalCase]#"
           class="po-md-12"
           p-label="#[description]#"
           [p-options]="#[enum.component,camelCase]#Options"
@@ -65,7 +65,7 @@
         </po-select>
 ?[end]??[!enumComponent=&isRangeFilter]?
         <po-select
-          name="filter#[name]#Initial"
+          name="filter#[name,PascalCase]#Initial"
           class="po-md-6"
           p-label="#[description]# Inicial"
           [p-options]="#[enum.component,camelCase]#Options"
@@ -80,27 +80,27 @@
         </po-select>
 ?[end]??[jsType=number&enumComponent=&zoomComponent=&!isRangeFilter]?
         <po-number
-          name="filter#[name]#"
+          name="filter#[name,PascalCase]#"
           class="po-md-12"
           p-label="#[description]#"
           [(ngModel)]="filter.#[name]#">
         </po-number>
 ?[end]??[jsType=number&enumComponent=&zoomComponent=&isRangeFilter]?
         <po-number
-          name="filter#[name]#Initial"
+          name="filter#[name,PascalCase]#Initial"
           class="po-md-6"
           p-label="#[description]# Inicial"
           [(ngModel)]="filter.#[name]#Initial">
         </po-number>
         <po-number
-          name="filter#[name]#Final"
+          name="filter#[name,PascalCase]#Final"
           class="po-md-6"
           p-label="#[description]# Final"
           [(ngModel)]="filter.#[name]#Final">
         </po-number>
 ?[end]??[jsType=boolean&enumComponent=&zoomComponent=&!isRangeFilter]?
         <po-switch
-          name="filter#[name]#"
+          name="filter#[name,PascalCase]#"
           class="po-md-12"
           p-label="#[description]#"
           p-label-off="Não"
@@ -109,7 +109,7 @@
         </po-switch>
 ?[end]??[jsType=boolean&enumComponent=&zoomComponent=&isRangeFilter]?
         <po-switch
-          name="filter#[name]#Initial"
+          name="filter#[name,PascalCase]#Initial"
           class="po-md-6"
           p-label="#[description]# Inicial"
           p-label-off="Não"
@@ -117,7 +117,7 @@
           [(ngModel)]="filter.#[name]#Initial">
         </po-switch>
         <po-switch
-          name="filter#[name]#Final"
+          name="filter#[name,PascalCase]#Final"
           class="po-md-6"
           p-label="#[description]# Final"
           p-label-off="Não"
@@ -126,20 +126,20 @@
         </po-switch>
 ?[end]??[jsType=string&enumComponent=&zoomComponent=&!isRangeFilter]?
         <po-input
-          name="filter#[name]#"
+          name="filter#[name,PascalCase]#"
           class="po-md-12"
           p-label="#[description]#"
           [(ngModel)]="filter.#[name]#">
         </po-input>
 ?[end]??[jsType=string&enumComponent=&zoomComponent=&isRangeFilter]?
         <po-input
-          name="filter#[name]#Initial"
+          name="filter#[name,PascalCase]#Initial"
           class="po-md-6"
           p-label="#[description]# Inicial"
           [(ngModel)]="filter.#[name]#Initial">
         </po-input>
         <po-input
-          name="filter#[name]#Final"
+          name="filter#[name,PascalCase]#Final"
           class="po-md-6"
           p-label="#[description]# Final"
           [(ngModel)]="filter.#[name]#Final">
@@ -149,3 +149,11 @@
     </ng-template>
   </div>
 </gps-page-list>
+
+<gps-export-data
+	#exportComponent
+	[data]="pageController.listItems"
+	[columns]="exportColumns"
+	canChoose
+	fileName="#[app.component,PascalCase]#List.csv">
+</gps-export-data>

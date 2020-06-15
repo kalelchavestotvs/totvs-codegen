@@ -7,22 +7,19 @@ import { #[component,PascalCase]# } from './#[component]#';
 export class #[app.component,PascalCase]#Extended extends #[app.component,PascalCase]# {
 
     $actions:string[];
- 
 @[app.fields,!zoomComponent=]@
     $#[name]#:#[zoom.component,PascalCase]#;
-@[end]@
-@[app.fields,!enumComponent=]@
+@[end]@@[app.fields,!enumComponent=]@
     $#[name]#Description: string = '';
 @[end]@
-    
 @[app.fields,!zoomComponent=]@
     get $#[name]#Description() {
         if (isNullOrUndefined(this.$#[name]#))
             return '';
         return `${this.$#[name]#} - ${this.$#[name]#.#[zoom.labelField]#}`;
     }
-
 @[end]@
+
     parseJsonToObject(jsonData): #[app.component,PascalCase]#Extended {
         super.parseJsonToObject(jsonData);
         return this;

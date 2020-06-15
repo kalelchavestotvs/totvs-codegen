@@ -10,7 +10,7 @@ export class #[app.component,PascalCase]#Service {
   private readonly url = '#[app.module]#/#[app.version]#/#[app.component,camelCase,Plural]#';
   private readonly urlKeys = `${this.url}@[app.fields,isPrimary]@/{{#[name]#}}@[end]@`;
 
-  getByFilter(pageFilter?:GpsPageFilter<any>,expand?:string[],fields?:string[]): Promise<TTalkCollection<#[app.component,PascalCase]#>> {
+  getByFilter(pageFilter?:GpsPageFilter<I#[app.component,PascalCase]#Filter>,expand?:string[],fields?:string[]): Promise<TTalkCollection<#[app.component,PascalCase]#>> {
     return TotvsGpsServices
       .getInstance<#[app.component,PascalCase]#>(#[app.component,PascalCase]#, this.url)
       .setPage(pageFilter.listPage)
