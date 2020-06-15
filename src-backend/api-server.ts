@@ -20,7 +20,7 @@ let getTemplateIndex = ():Promise<IResponse> => {
             if (data)
                 resolve({status:200, data:data})
             else
-                resolve({status:500, data:'500 Template index not found'})
+                resolve({status:500, data:'Template index not found'})
         })
     })
 }
@@ -32,7 +32,7 @@ let getTableIndex = ():Promise<IResponse> => {
             if (data)
                 resolve({status:200, data:data})
             else
-                resolve({status:500, data:'500 Table index not found'})
+                resolve({status:500, data:'Table index not found'})
         })
     })
 }
@@ -44,7 +44,7 @@ let getTable = (table:string):Promise<IResponse> => {
             if (data)
                 resolve({status:200, data:data})
             else
-                resolve({status:500, data:'500 Table definition not found'})
+                resolve({status:500, data:'Table definition not found'})
         })
     })
 }
@@ -55,35 +55,41 @@ let getApplication = (name:string):Promise<IResponse> => {
         if (app)
             resolve({status:200, data:JSON.stringify(app)})
         else
-            resolve({status:500, data:'500 Application not found'})
+            resolve({status:500, data:'Application not found'})
     })
 }
 
 let searchApplication = (filter:string):Promise<IResponse> => {
     let apps = cache.applications()
     let result = []
-    let filterData: {table?,name?,q?} = {}
+    let filterData: {table?,name?,component?,q?} = {}
     let filters = (filter?.split('&') || [])
     filters.forEach(f => {
         let v = f.split('=')
         if (v.length == 2)
-            filterData[v[0]] = v[1]        
+            filterData[v[0]] = v[1].toLowerCase()        
     })
     return new Promise(resolve => {
         apps.forEach(app => {
             if (filterData.name) {
-                if (app.name != filterData.name)
+                if (!app.name.toLowerCase().includes(filterData.name))
                     return
             }
             if (filterData.table) {
-                if (app.table != filterData.table)
+                if (app.table.toLowerCase() != filterData.table)
+                    return
+            }
+            if (filterData.component) {
+                if (app.component != filterData.table)
                     return
             }
             if (filterData.q) {
                 let ok = false
-                if (app.table == filterData.q)
+                if (app.name.toLowerCase().includes(filterData.q))
                     ok = true
-                if (app.name == filterData.q)
+                if (app.table.toLowerCase() == filterData.q)
+                    ok = true
+                if (app.component.toLowerCase() == filterData.q)
                     ok = true
                 if (!ok)
                     return
@@ -107,7 +113,7 @@ let searchRelation = (filter:string):Promise<IResponse> => {
     if (filterData.field)
         filterData.field = dataUtil.summaryName(filterData.field)
     return new Promise(resolve => {
-        apps.forEach(app => {
+        apps?.forEach(app => {
             let ok = false
             if (filterData.field) {
                 let pk = app.fields.filter(f => f.isPrimary)
@@ -132,28 +138,27 @@ let createApplication = (data?:string):Promise<IResponse> => {
             if (data)
                 appData = JSON.parse(data)
             else
-                throw "500";
+                throw 'Application data error';
             //
             if (validateApplication(appData)) {
                 let applicationName = appData.name
                 let fname = path.join(appDirectory,`${applicationName}.json`)
                 fs.exists(fname, (exist) => {
                     if (exist)
-                        resolve({status:500, data:'Application already exists'})
-                    else 
-                        fs.writeFile(fname,data,(err) => {
-                            if (err)
-                                throw "500"
-                            resolve({status:200, data:JSON.stringify(appData)})
-                        })
+                        throw 'Application already exists'
+                    fs.writeFile(fname,data,(err) => {
+                        if (err)
+                            throw 'Write error'
+                        resolve({status:200, data:JSON.stringify(appData)})
+                    })
                 })
             }
             else {
-                throw "500"
+                throw 'Invalid application data'
             }
         } 
-        catch {
-            resolve({status:500, data:'500 - Application data error'})
+        catch(e) {
+            resolve({status:500, data:e})
         }
     })
 }
@@ -166,7 +171,7 @@ let updateApplication = (name:string,data?:string):Promise<IResponse> => {
             if (data)
                 appData = JSON.parse(data)
             else
-                throw "500";
+                throw 'Application data error';
             //
             appData.name = name
             if (validateApplication(appData)) {
@@ -174,16 +179,49 @@ let updateApplication = (name:string,data?:string):Promise<IResponse> => {
                 let fname = path.join(appDirectory,`${applicationName}.json`)
                 fs.writeFile(fname,data,(err) => {
                     if (err)
-                        throw "500"
+                        throw 'Write error'
                     resolve({status:200, data:JSON.stringify(appData)})
                 })
             }
             else {
-                throw "500"
+                throw 'Invalid application data'
             }
         } 
-        catch {
-            resolve({status:500, data:'500 - Application data error'})
+        catch(e) {
+            resolve({status:500, data:e})
+        }
+    })
+}
+
+let deleteApplication = (name:string,data?:string):Promise<IResponse> => {
+    let apps = cache.applications().filter(item => item.name != name)
+    cache.reset()
+    return new Promise(resolve => {
+        try {
+            let zApp = apps.filter(a => { return !!a.zooms?.find(z => z.application == name)  })
+            if (zApp?.length > 0) {
+                let zName = zApp.slice(0,2).map(item => item.name).join(', ')
+                if (zApp.length > 3)
+                    zName += '...'
+                throw `This application is referenced in another application(s): ${zName}`
+            }
+            //
+            let fname = path.join(appDirectory,`${name}.json`)
+            if (!fs.existsSync(fname))
+                throw 'Application file no found'
+            fs.unlink(fname, (err) => {
+                if (err) {
+                    console.log(err)
+                    throw 'Error deleting the application file'
+                }
+                else {
+                    resolve({status:204})
+                    cache.reset()
+                }
+            })
+        } 
+        catch(e) {
+            resolve({status:500, data:e})
         }
     })
 }
@@ -195,7 +233,7 @@ let postGenerate = (data?:string):Promise<IResponse> => {
             if (data)
                 appData = JSON.parse(data)
             else
-                throw "500";
+                throw 'Application data error';
             //
             let templates = appData.templates
             let applicationName = appData.application
@@ -213,8 +251,8 @@ let postGenerate = (data?:string):Promise<IResponse> => {
                 })
                 .catch((e) => { throw e })
         } 
-        catch {
-            resolve({status:500, data:'500 - Application data error'})
+        catch(e) {
+            resolve({status:500, data:e})
         }
     })
 }
@@ -299,6 +337,15 @@ var apiServer = {
                 switch (methodPath[0]) {
                     case 'application':
                         updateApplication(methodPath[1],data).then(v => writeResponse(v))
+                        break
+                    default:
+                        throw 'Not found'
+                }
+            }
+            else if ((req.method == 'DELETE')&&(methodPath.length == 2)) {
+                switch (methodPath[0]) {
+                    case 'application':
+                        deleteApplication(methodPath[1]).then(v => writeResponse(v))
                         break
                     default:
                         throw 'Not found'

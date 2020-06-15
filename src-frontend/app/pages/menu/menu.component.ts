@@ -44,16 +44,18 @@ export class MenuComponent implements AfterViewInit {
   ];
   pageFilter: PoPageFilter = {
     ngModel: 'filterModel',
-    action: this.searchApp.bind(this)
+    action: this.searchApp.bind(this),
+    placeholder: 'App/tabela/componente'
   };
   applicationListColumns: PoTableColumn[] = [
     { property: 'name', label: 'Aplicação', width: '20%' },
     { property: 'component', label: 'Componente', width: '20%' },
     { property: 'table', label: 'Tabela', width: '20%' },
     { property: 'description', label: 'Descrição' },
-    { property: '$actions', label: 'Ação', width: '4em', type: 'icon', icons: 
+    { property: '$actions', label: 'Ação', width: '7em', type: 'icon', icons: 
       [
-        { value: 'edit', color: 'color-01', icon: 'po-icon-edit', action: (item) => { this.onEditAppClick(item) } }
+        { value: 'edit', color: 'color-01', icon: 'po-icon-edit', action: (item) => { this.onEditAppClick(item) } },
+        { value: 'delete', color: 'color-07', icon: 'po-icon-delete', action: (item) => { this.onDeleteAppClick(item) } }
       ]
     }
   ];
@@ -66,6 +68,11 @@ export class MenuComponent implements AfterViewInit {
 
   onEditAppClick(app:ApplicationIndex) {
     this.router.navigate(['application',app.name]);
+  }
+
+  onDeleteAppClick(app:ApplicationIndex) {
+    this.requestService.deleteApplication(app);
+    this.searchApp();
   }
   //#endregion
 

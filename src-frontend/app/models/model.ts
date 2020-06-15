@@ -19,7 +19,7 @@ export class InsertedField {
 }
 
 export class ApplicationIndexList extends ApplicationIndex {
-  $actions = ['edit'];
+  $actions = ['edit','delete'];
 
   parseJsonToObject(data:any): ApplicationIndexList {
     super.parseJsonToObject(data);

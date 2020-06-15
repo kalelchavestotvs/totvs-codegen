@@ -113,8 +113,10 @@ export class ApplicationEditComponent implements AfterContentInit {
     if (!this.application.name) {
       this.applicationNameComponent.query(this.application.table).then(value => {
         if (value) {
-          this.application.name = value;
-          this.requestService.createApplication(this.application).then(() => {
+          let app = Object.assign({},this.application);
+          app.name = value;
+          this.requestService.createApplication(app).then(() => {
+            this.application = app;
             this.dataService.applications.push(this.application);
             this.notificationService.success(`Aplicação ${this.application.name} criada com sucesso!`);
             this.router.navigate(['']);

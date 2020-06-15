@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ZikiHttpServices } from 'ziki-http-services';
 import { TableIndex, Table } from '../models/table';
 import { TemplateIndex } from '../models/template';
-import { Application } from '../models/application';
+import { Application, ApplicationIndex } from '../models/application';
 import { GenerateResult, Generate } from '../models/generate';
 
 @Injectable()
@@ -62,6 +62,13 @@ export class RequestService {
       .getInstance<any>(Object, this.URL_APPLICATION_KEY)
       .setPathParams({name:application.name})
       .put(application);
+  }
+
+  deleteApplication(application:ApplicationIndex) {
+    return ZikiHttpServices
+      .getInstance<any>(Object, this.URL_APPLICATION_KEY)
+      .setPathParams({name:application.name})
+      .delete();
   }
 
   generate(application:Application,templates:string[],session?:string): Promise<GenerateResult> {
