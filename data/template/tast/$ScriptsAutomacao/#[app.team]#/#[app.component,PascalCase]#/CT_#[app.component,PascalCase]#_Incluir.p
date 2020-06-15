@@ -1,6 +1,6 @@
 /*******************************************************************************
- CT.............: CT_#[app.component,PascalCase]#_Pesquisa_Filtro.p
- Objetivo ......: Caso de testes para consulta por filtro
+ CT.............: CT_#[app.component,PascalCase]#_Adicionar.p
+ Objetivo ......: Caso de testes para adicionar novo registro
  ******************************************************************************/
 using classes.test.*.
 
@@ -53,7 +53,6 @@ procedure executa-teste:
 	def var oFdRowErrors as AssertFieldCollection no-undo.
     
     // variaveis de controle
-    def var lHasNext as log no-undo.
     def var lError as log no-undo.
     def var cReturn as char no-undo.   
     def var h-bosau-#[app.component]#-aux as handle no-undo.
@@ -70,28 +69,25 @@ procedure executa-teste:
 		output oFdRowErrors).
 
     // atribui dados de entrada/saida
-	for first #[app.table]#:
-        create tmp#[app.component,PascalCase]#Filter.
-        assign 
-@[app.fields,isFilter&!isRangeFilter]@
-	        tmp#[app.component,PascalCase]#Filter.#[field]# = #[app.table]#.#[field]#
-@[end]@@[app.fields,isFilter&isRangeFilter]@
-	        tmp#[app.component,PascalCase]#Filter.#[field]#-ini = #[app.table]#.#[field]#
-            tmp#[app.component,PascalCase]#Filter.#[field]#-fim = #[app.table]#.#[field]#
-@[end]@.
-
+	for last #[app.table]#:
         create GPS_#[app.component,PascalCase]#.
         buffer-copy #[app.table]# to GPS_#[app.component,PascalCase]#.
+
+        create tmp#[app.component,PascalCase]#.
+        buffer-copy #[app.table]# to tmp#[app.component,PascalCase]#.
+
+        // proximo codigo
+        assign
+@[app.fields,isPrimary]@
+            tmp#[app.component,PascalCase]#.#[field]#  = tmp#[app.component,PascalCase]#.#[field]# + ?[ablType=character]?"Z"?[end]??[!ablType=character]?1?[end]?
+            GPS_#[app.component,PascalCase]#.#[field]# = tmp#[app.component,PascalCase]#.#[field]#
+@[end]@.
     end.
 
     // executa teste
     {hdp/hdrunpersis.i "#[app.module]#/bosau/bosau-#[app.component]#.p" "h-bosau-#[app.component]#-aux"}
-    run getByFilter in h-bosau-#[app.component]#-aux (
-        input 1,
-        input 1,
-        input table tmp#[app.component,PascalCase]#Filter,
-        output lHasNext,
-        output table tmp#[app.component,PascalCase]#,
+    run createRecord in h-bosau-#[app.component]#-aux (
+		input-output table tmp#[app.component,PascalCase]#,
 		input-output table rowErrors
     ) no-error.
 
@@ -101,8 +97,6 @@ procedure executa-teste:
  
     // realiza comparacoes
 	oAssert:false("error-status", lError).
-	oAssert:equal("return-value", "OK", cReturn).
-    oAssert:false("has-next", lHasNext).
 	oAssert:matchTable(temp-table GPS_#[app.component,PascalCase]#:default-buffer-handle, temp-table tmp#[app.component,PascalCase]#:default-buffer-handle, oFd#[app.component,PascalCase]#).
 	oAssert:matchTable(temp-table GPS_RowErrors:default-buffer-handle, temp-table rowErrors:default-buffer-handle, oFdRowErrors).
 

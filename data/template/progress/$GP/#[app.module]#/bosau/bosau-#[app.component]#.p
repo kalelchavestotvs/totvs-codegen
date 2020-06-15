@@ -17,7 +17,7 @@ this-procedure:private-data = "bosau-#[app.component]#".
 ?[isFirst]?
 function nextSequence returns #[ablType]#:
     def buffer b-#[app.table]# for #[app.table]#.
-    for first b-#[app.table]# no-lock break by b-#[app.table]#.#[field]# desc:
+    for last b-#[app.table]# no-lock by b-#[app.table]#.#[field]#:
         return b-#[app.table]#.#[field]# + 1.
     end.
     return 1.
