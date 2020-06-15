@@ -88,8 +88,8 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
   }
 
   initializePageController(){
-    this.pageController.title = "#[app.description]#";
-    this.pageController.advancedFilterTitle = "Filtrar busca";
+    this.pageController.title = '#[app.description]#';
+    this.pageController.advancedFilterTitle = 'Filtrar busca';
     this.pageController.tableMessage = 'Utilize os campos de filtro para pesquisar';
   }
 
@@ -131,11 +131,8 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
   private search() {
     this.gpsPageList.showLoading('Pesquisando...');
     this.service.getByFilter(this.pageFilter)
-      .then(result => { 
-        this.gpsPageList.hideLoading();
-        this.resultSearch(result);
-      })
-      .catch(() => this.gpsPageList.hideLoading());
+      .then(result => this.resultSearch(result))
+      .finally(() => this.gpsPageList.hideLoading());
   }
 
   resultSearch(result){
@@ -176,8 +173,8 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
       confirm: () => {
         this.gpsPageList.showLoading('Removendo...');
         this.service.removeByObject(item)
-          .then(result => {              
-            this.gpsPageList.hideLoading();  
+          .then(result => {       
+            this.gpsPageList.hideLoading();       
             this.notificationService.success('Registro removido com sucesso!');
             this.resetSearch();                
           })

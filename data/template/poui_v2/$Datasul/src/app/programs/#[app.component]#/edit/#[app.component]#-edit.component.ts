@@ -93,11 +93,8 @@ export class #[app.component,PascalCase]#EditComponent implements OnInit {
         this.service.insert(this.data).then(value => { this.notificationService.success('Registro cadastrado com sucesso!'); return value; })
       : this.service.update(this.data).then(value => { this.notificationService.success('Registro alterado com sucesso!'); return value; });
     _promise
-      .then(result => {
-        this.gpsPageEdit.hideLoading();
-        this.onBack();
-      })
-      .catch(() => this.gpsPageEdit.hideLoading());
+      .then(result => this.onBack())
+      .finally(() => this.gpsPageEdit.hideLoading());
   }
 
   setData(value){  

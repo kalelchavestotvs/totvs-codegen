@@ -65,11 +65,10 @@ export class #[app.component,PascalCase]#DetailComponent implements OnInit {
         this.gpsPageDetail.showLoading('Removendo...');
         this.service.removeByObject(this.data)
           .then(result => {
-            this.gpsPageDetail.hideLoading();
             this.notificationService.success('Registro removido com sucesso!');
             this.onBack();
           })
-          .catch(() => this.gpsPageDetail.hideLoading());
+          .finally(() => this.gpsPageDetail.hideLoading());
       }
     });
   }
