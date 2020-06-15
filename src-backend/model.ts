@@ -5,6 +5,7 @@ export interface IApplication {
     description?:string
     module?:string
     version?:string
+    team?:string
 
     fields?:IField[]
     enums?:IEnum[]

@@ -13,6 +13,7 @@ export class ApplicationIndex {
 export class Application extends ApplicationIndex {
   module:string;
   version:string;
+  team:string;
 
   fields:ApplicationField[];
   enums:ApplicationEnum[];

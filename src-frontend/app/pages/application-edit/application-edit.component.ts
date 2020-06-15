@@ -119,6 +119,7 @@ export class ApplicationEditComponent implements AfterContentInit {
             this.application = app;
             this.dataService.applications.push(this.application);
             this.notificationService.success(`Aplicação ${this.application.name} criada com sucesso!`);
+            window.localStorage.setItem('codegen-team', this.application.team);
             this.router.navigate(['']);
           })
         }
@@ -129,6 +130,7 @@ export class ApplicationEditComponent implements AfterContentInit {
         let app = this.dataService.applications.find(item => item.name == this.application.name);
         Object.assign(app, this.application);
         this.notificationService.success(`Aplicação ${this.application.name} alterada com sucesso!`);
+        window.localStorage.setItem('codegen-team', this.application.team);
         this.router.navigate(['']);
       });
     }
@@ -329,6 +331,7 @@ export class ApplicationEditComponent implements AfterContentInit {
     else {
       this.application.module = 'hxx';
       this.application.version = 'v1';
+      this.application.team = window.localStorage.getItem('codegen-team');
     }
     this.refreshAppFieldList();
     this.refreshEnumZoomList();

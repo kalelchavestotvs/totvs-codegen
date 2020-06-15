@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { PoPageAction, PoTableColumn, PoTableComponent, PoPageFilter } from '@po-ui/ng-components';
+import { PoPageAction, PoTableColumn, PoTableComponent, PoPageFilter, PoDialogService } from '@po-ui/ng-components';
 import { Router } from '@angular/router';
 import { ApplicationIndex, Application } from '../../models/application';
 import { DataService } from '../../services/data.service';
@@ -23,6 +23,7 @@ export class MenuComponent implements AfterViewInit {
   constructor(
     private dataService: DataService,
     private requestService: RequestService,
+    private dialogService: PoDialogService,
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router
   ) { }
@@ -71,8 +72,14 @@ export class MenuComponent implements AfterViewInit {
   }
 
   onDeleteAppClick(app:ApplicationIndex) {
-    this.requestService.deleteApplication(app);
-    this.searchApp();
+    this.dialogService.confirm({
+      title: 'Remoção',
+      message: 'Confirma a remoção permanente deste projeto?',
+      confirm: () => {
+        this.requestService.deleteApplication(app);
+        this.searchApp();
+      }
+    });
   }
   //#endregion
 

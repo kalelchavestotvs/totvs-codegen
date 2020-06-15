@@ -33,18 +33,25 @@
             [(ngModel)]="application.description">
           </po-input>
           <po-input 
-            class="po-md-3"
+            class="po-md-2"
             name="module"
             [p-disabled]="!application.table"
             p-label="Módulo"
             [(ngModel)]="application.module">
           </po-input>
           <po-input 
-            class="po-md-3"
+            class="po-md-2"
             name="version"
             [p-disabled]="!application.table"
             p-label="Versão"
             [(ngModel)]="application.version">
+          </po-input>
+          <po-input 
+            class="po-md-2"
+            name="team"
+            [p-disabled]="!application.table"
+            p-label="Time responsável"
+            [(ngModel)]="application.team">
           </po-input>
         </div>
       </po-accordion-item>

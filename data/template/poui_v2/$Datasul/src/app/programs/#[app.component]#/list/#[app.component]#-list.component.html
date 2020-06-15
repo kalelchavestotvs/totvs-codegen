@@ -149,3 +149,11 @@
     </ng-template>
   </div>
 </gps-page-list>
+
+<gps-export-data
+	#exportComponent
+	[data]="pageController.listItems"
+	[columns]="exportColumns"
+	canChoose
+	fileName="#[app.component,PascalCase]#List.csv">
+</gps-export-data>

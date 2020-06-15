@@ -2,7 +2,7 @@ import { Router } from '@angular/router';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { isNullOrUndefined } from 'util';
 import { PoDialogService, PoNotificationService, PoPageAction, PoTableColumn, PoTableAction, PoSelectOption } from '@po-ui/ng-components';
-import { GpsPageListComponent, IDisclaimerConfig } from 'totvs-gps-controls';
+import { GpsPageListComponent, IDisclaimerConfig, GpsExportDataComponent, IExportColumn } from 'totvs-gps-controls';
 import { GpsPageFilter, GpsPageNavigation, GpsCRUDListModel } from 'totvs-gps-crud';
 import { #[app.component,PascalCase]#Service } from '../services/#[app.component]#.service';
 import { #[app.component,PascalCase]#, I#[app.component,PascalCase]#Filter } from '../models/#[app.component]#';
@@ -23,10 +23,12 @@ import { #[component,PascalCase]#Zoom } from '../zoom/#[component]#.zoom';
 export class #[app.component,PascalCase]#ListComponent implements OnInit {
 
   @ViewChild('gpsPageList', {static: true}) gpsPageList: GpsPageListComponent;
+  @ViewChild('exportComponent', {static: false}) exportComponent: GpsExportDataComponent;
 
   pageNavigation:GpsPageNavigation = new GpsPageNavigation();
   pageController:GpsCRUDListModel<#[app.component,PascalCase]#> = new GpsCRUDListModel<#[app.component,PascalCase]#>();
   pageFilter:GpsPageFilter<I#[app.component,PascalCase]#Filter> = new GpsPageFilter<I#[app.component,PascalCase]#Filter>();
+  exportColumns: IExportColumn[];
 
   //#region Enumeradores
 @[app.enums]@
@@ -69,7 +71,8 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
 
   private setActions() {
     this.pageController.actions = [
-      { label:'Adicionar',  action: this.onNew.bind(this) }
+      { label:'Adicionar',  action: this.onNew.bind(this) },
+      { label:'Exportar',  action: this.onExport.bind(this) }
     ];
   }
 
@@ -84,6 +87,12 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
           { value: 'remove', icon: 'po-icon-delete', tooltip: 'Remover', color: 'color-07', action: this.onRemove.bind(this) }
         ]
       }
+    ];
+
+    this.exportColumns = [
+@[app.fields,isVisible]@
+      { property: '?[!zoomComponent=]?$?[end]??[!enumComponent=]?$?[end]?#[name]#?[!zoomComponent=]?Description?[end]??[!enumComponent=]?Description?[end]?', label: '#[description]#'?[ablType=date]?, transform: (value) => { return (value) ? new Date(value).toLocaleDateString() : '' }?[end]? },
+@[end]@
     ];
   }
 
@@ -190,6 +199,10 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
   onDetail(item:#[app.component,PascalCase]#) {
     if(item)
       this.pageNavigation.detailRegisterPage(item);
+  }
+
+  onExport() {
+    this.exportComponent.export(true);
   }
   //#endregion
 
