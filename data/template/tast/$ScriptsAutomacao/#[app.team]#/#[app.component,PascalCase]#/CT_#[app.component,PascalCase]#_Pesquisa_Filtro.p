@@ -75,7 +75,8 @@ procedure executa-teste:
         assign 
 @[app.fields,isFilter&!isRangeFilter]@
 	        tmp#[app.component,PascalCase]#Filter.#[field]# = #[app.table]#.#[field]#
-@[end]@@[app.fields,isFilter&isRangeFilter]@
+@[end]@
+@[app.fields,isFilter&isRangeFilter]@
 	        tmp#[app.component,PascalCase]#Filter.#[field]#-ini = #[app.table]#.#[field]#
             tmp#[app.component,PascalCase]#Filter.#[field]#-fim = #[app.table]#.#[field]#
 @[end]@.

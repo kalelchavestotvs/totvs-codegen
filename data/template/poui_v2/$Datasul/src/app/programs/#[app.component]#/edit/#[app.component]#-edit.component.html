@@ -33,12 +33,14 @@
 ?[end]??[jsType=number&enumComponent=&zoomComponent=]?
       <po-number
         name="#[name]#"
-        class="po-sm-12 po-md-12 po-lg-6 po-xl-6 po-offset-lg-3 po-offset-xl-3"
+        class="po-sm-12 po-md-6 po-lg-3 po-xl-3 po-offset-lg-3 po-offset-xl-3"
         p-label="#[description]#"
+        p-maxlength="#[maxSize]#"
         p-required="#[isMandatory]#"
         [p-disabled]="this.isNew ? #[isAuto]# : #[isEditable,negate]#"
         [(ngModel)]="data.#[name]#">
       </po-number>
+      <div class="po-hidden-sm po-md-6 po-lg-6 po-xl-6">&nbsp;</div>
 ?[end]??[jsType=boolean&enumComponent=&zoomComponent=]?
       <po-switch
         class="po-md-3"
@@ -50,11 +52,22 @@
         [p-disabled]="this.isNew ? #[isAuto]# : #[isEditable,negate]#"
         [(ngModel)]="data.#[name]#">
       </po-switch>
+?[end]??[jsType=Date&enumComponent=&zoomComponent=]?
+      <po-datepicker
+        name="#[name]#"
+        class="po-sm-12 po-md-6 po-lg-3 po-xl-3 po-offset-lg-3 po-offset-xl-3"
+        p-label="#[description]#"
+        p-required="#[isMandatory]#"
+        [p-disabled]="this.isNew ? #[isAuto]# : #[isEditable,negate]#"
+        [(ngModel)]="data.#[name]#">
+      </po-datepicker>
+      <div class="po-hidden-sm po-md-6 po-lg-6 po-xl-6">&nbsp;</div>
 ?[end]??[jsType=string&enumComponent=&zoomComponent=]?
       <po-input
         name="#[name]#"
         class="po-sm-12 po-md-12 po-lg-6 po-xl-6 po-offset-lg-3 po-offset-xl-3"
         p-label="#[description]#"
+        p-maxlength="#[maxSize]#"
         p-required="#[isMandatory]#"
         [p-disabled]="this.isNew ? #[isAuto]# : #[isEditable,negate]#"
         [(ngModel)]="data.#[name]#">

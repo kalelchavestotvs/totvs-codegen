@@ -19,8 +19,7 @@ export interface I#[app.component,PascalCase]#Filter {
   q?:string;
 @[app.fields,isFilter]@?[isRangeFilter]?
   #[name]#Initial?:#[jsType]#;
-  #[name]#Final?:#[jsType]#;
-?[end]??[!isRangeFilter]?
-  #[name]#?:#[jsType]#;
-?[end]?@[end]@
+  #[name]#Final?:#[jsType]#;?[end]??[!isRangeFilter]?
+  #[name]#?:#[jsType]#;?[end]?
+@[end]@
 }

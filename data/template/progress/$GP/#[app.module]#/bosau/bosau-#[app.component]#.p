@@ -107,12 +107,12 @@ procedure getByFilter:
             assign lg-value-integer-aux = not error-status:error.
 
             oWhere = oQuery:and().
-@[app.fields,isFilter&!isRangeFilter&ablType=character]@
+@[app.fields,isFilter&ablType=character]@
             oWhere:or("#[app.table]#.#[field]#", tmp#[app.component,PascalCase]#Filter.ds-query, oWhere:OPERATOR_BG).
 @[end]@
             if lg-value-integer-aux
             then do:
-@[app.fields,isFilter&!isRangeFilter&ablType=integer]@
+@[app.fields,isFilter&ablType=integer]@
                 oWhere:or("#[app.table]#.#[field]#", in-search-value-aux).
 @[end]@
             end.

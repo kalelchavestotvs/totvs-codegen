@@ -91,7 +91,7 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
 
     this.exportColumns = [
 @[app.fields,isVisible]@
-      { property: '?[!zoomComponent=]?$?[end]??[!enumComponent=]?$?[end]?#[name]#?[!zoomComponent=]?Description?[end]??[!enumComponent=]?Description?[end]?', label: '#[description]#'?[ablType=date]?, transform: (value) => { return (value) ? new Date(value).toLocaleDateString() : '' }?[end]? },
+      { property: '?[!zoomComponent=]?$?[end]??[!enumComponent=]?$?[end]?#[name]#?[!zoomComponent=]?Description?[end]??[!enumComponent=]?Description?[end]?', label: '#[description]#'?[ablType=date]?, transform: (value) => { return (value ? new Date(value).toLocaleDateString() : '') }?[end]? },
 @[end]@
     ];
   }
@@ -99,7 +99,6 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
   initializePageController(){
     this.pageController.title = '#[app.description]#';
     this.pageController.advancedFilterTitle = 'Filtrar busca';
-    this.pageController.tableMessage = 'Utilize os campos de filtro para pesquisar';
   }
 
   setDisclaimerConfig(){
@@ -150,7 +149,6 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
   resultSearch(result){
     this.pageFilter.resumeSearch(result);
     this.setItensTable(result.items);
-    this.pageController.tableMessage = undefined; // volta a mensagem padrão da table
   }
 
   resetPage(){
