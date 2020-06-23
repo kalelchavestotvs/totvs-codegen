@@ -43,7 +43,7 @@
       <div class="po-hidden-sm po-md-6 po-lg-6 po-xl-6">&nbsp;</div>
 ?[end]??[jsType=boolean&enumComponent=&zoomComponent=]?
       <po-switch
-        class="po-md-3"
+      class="po-sm-12 po-md-6 po-lg-3 po-xl-3 po-offset-lg-3 po-offset-xl-3"
         name="#[name]#"
         p-label-off="Não"
         p-label-on="Sim"
@@ -52,6 +52,7 @@
         [p-disabled]="this.isNew ? #[isAuto]# : #[isEditable,negate]#"
         [(ngModel)]="data.#[name]#">
       </po-switch>
+      <div class="po-hidden-sm po-md-6 po-lg-6 po-xl-6">&nbsp;</div>
 ?[end]??[jsType=Date&enumComponent=&zoomComponent=]?
       <po-datepicker
         name="#[name]#"
