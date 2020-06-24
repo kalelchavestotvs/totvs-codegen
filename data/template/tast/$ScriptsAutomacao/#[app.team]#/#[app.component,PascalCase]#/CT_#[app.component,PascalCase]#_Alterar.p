@@ -76,7 +76,7 @@ procedure executa-teste:
         // altera campos
         assign
 @[app.fields,!isPrimary&isEditable]@
-            tmp#[app.component,PascalCase]#.#[field]#  = tmp#[app.component,PascalCase]#.#[field]# + ?[ablType=character]?"Z"?[end]??[!ablType=character]?1?[end]?
+            tmp#[app.component,PascalCase]#.#[field]#  = ?[ablType=logical]?not ?[end]?tmp#[app.component,PascalCase]#.#[field]#?[ablType=character]? + "Z"?[end]??[!ablType=character&!ablType=logical]? + 1?[end]?
 @[end]@.
 
         create GPS_#[app.component,PascalCase]#.

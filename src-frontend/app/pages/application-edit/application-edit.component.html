@@ -22,6 +22,7 @@
             [p-disabled]="!application.table"
             p-label="Nome do componente"
             p-tooltip="Informar nome em inglês, tudo em minúsculo, separando as palavras por hífen"
+            p-placeholder="meu-componente"
             (p-change)="onChangeComponent()"
             [(ngModel)]="application.component">
           </po-input>
