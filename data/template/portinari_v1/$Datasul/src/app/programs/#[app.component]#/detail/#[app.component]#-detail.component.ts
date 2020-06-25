@@ -97,7 +97,7 @@ export class #[app.component,PascalCase]#DetailComponent implements OnInit {
 @[app.zooms]@
   private extend#[component,PascalCase]#(value) {
     let model = new #[component,PascalCase]#().parseJsonToObject({#[keyField]#: value});
-    return this.#[component,ControllerName]#Zoom.zoomById(model);
+    return this.#[component,camelCase]#Zoom.zoomById(model);
   }
 
 @[end]@

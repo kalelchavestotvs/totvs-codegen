@@ -91,7 +91,7 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
 
     this.exportColumns = [
 @[app.fields,isVisible]@
-      { property: '?[!zoomComponent=]?$?[end]??[!enumComponent=]?$?[end]?#[name]#?[!zoomComponent=]?Description?[end]??[!enumComponent=]?Description?[end]?', label: '#[description]#'?[ablType=date]?, transform: (value) => { return (value ? new Date(value).toLocaleDateString() : '') }?[end]? },
+      { property: '?[!zoomComponent=]?$?[end]??[!enumComponent=]?$?[end]?#[name]#?[!zoomComponent=]?Description?[end]??[!enumComponent=]?Description?[end]?', label: '#[description]#'?[ablType=date]?, transform: (value) => { return (value ? new Date(value).toLocaleDateString() : '') }?[end]??[ablType=logical]?, transform: (value) => { return (value == 'true' ? 'Sim' : 'Não') }?[end]? },
 @[end]@
     ];
   }
@@ -220,7 +220,7 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
 @[app.zooms]@
   private extend#[component,PascalCase]#(value) {
     let model = new #[component,PascalCase]#().parseJsonToObject({#[keyField]#: value});
-    return this.#[component,ControllerName]#Zoom.zoomById(model);
+    return this.#[component,camelCase]#Zoom.zoomById(model);
   }
 
 @[end]@
