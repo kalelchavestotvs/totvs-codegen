@@ -1,0 +1,159 @@
+<gps-page-list 
+  #gpsPageList
+  [p-title]="pageController.title"
+  [p-actions]="pageController.actions"
+  [disclaimer-config]="pageFilter.disclaimerConfig"
+  [(filter)]="pageFilter.filter"
+  (on-search)="applySimpleFilter($event)"
+  (on-advanced-search)="applyAdvancedFilter($event)"
+  (before-advanced-search)="pageFilter.restoreAdvancedFilterDefaults()">
+  <div class="po-row">
+    <po-table 
+      class="po-md-12"
+      p-striped
+      [p-columns]="pageController.listColumns"
+      [p-items]="pageController.listItems"
+      [p-show-more-disabled]="!pageFilter.listHasNext"
+      (p-show-more)="onListShowMore()">
+    </po-table>
+
+    <ng-template gps-advanced-search>
+      <div class="po-row">
+@[app.fields,isFilter]@
+?[!zoomComponent=&!isRangeFilter]?
+        <po-lookup
+          name="filter#[name,PascalCase]#"
+          class="po-md-12"
+          p-label="#[description]#"
+          [p-columns]="#[zoom.component,camelCase]#Zoom.COLUMNS"
+          [p-filter-service]="#[zoom.component,camelCase]#Zoom"
+          [p-field-label]="#[zoom.component,camelCase]#Zoom.FIELD_LABEL"
+          [p-field-value]="#[zoom.component,camelCase]#Zoom.FIELD_VALUE"
+          [p-field-format]="#[zoom.component,camelCase]#Zoom.fieldFormat"
+          [(ngModel)]="filter.#[name]#">
+        </po-lookup>
+?[end]??[!zoomComponent=&isRangeFilter]?
+        <po-lookup
+          name="filter#[name,PascalCase]#Initial"
+          class="po-md-6"
+          p-label="#[description]# Inicial"
+          [p-columns]="#[zoom.component,camelCase]#Zoom.COLUMNS"
+          [p-filter-service]="#[zoom.component,camelCase]#Zoom"
+          [p-field-label]="#[zoom.component,camelCase]#Zoom.FIELD_LABEL"
+          [p-field-value]="#[zoom.component,camelCase]#Zoom.FIELD_VALUE"
+          [p-field-format]="#[zoom.component,camelCase]#Zoom.fieldFormat"
+          [(ngModel)]="filter.#[name]#Initial">
+        </po-lookup>
+        <po-lookup
+          name="filter#[name,PascalCase]#Final"
+          class="po-md-6"
+          p-label="#[description]# Final"
+          [p-columns]="#[zoom.component,camelCase]#Zoom.COLUMNS"
+          [p-filter-service]="#[zoom.component,camelCase]#Zoom"
+          [p-field-label]="#[zoom.component,camelCase]#Zoom.FIELD_LABEL"
+          [p-field-value]="#[zoom.component,camelCase]#Zoom.FIELD_VALUE"
+          [p-field-format]="#[zoom.component,camelCase]#Zoom.fieldFormat"
+          [(ngModel)]="filter.#[name]#Final">
+        </po-lookup>
+?[end]??[!enumComponent=&!isRangeFilter]?
+        <po-select
+          name="filter#[name,PascalCase]#"
+          class="po-md-12"
+          p-label="#[description]#"
+          [p-options]="#[enum.component,camelCase]#Options"
+          [(ngModel)]="filter.#[name]#">
+        </po-select>
+?[end]??[!enumComponent=&isRangeFilter]?
+        <po-select
+          name="filter#[name,PascalCase]#Initial"
+          class="po-md-6"
+          p-label="#[description]# Inicial"
+          [p-options]="#[enum.component,camelCase]#Options"
+          [(ngModel)]="filter.#[name]#Initial">
+        </po-select>
+        <po-select
+          name=filter"#[name]#Final"
+          class="po-md-6"
+          p-label="#[description]# Final"
+          [p-options]="#[enum.component,camelCase]#Options"
+          [(ngModel)]="filter.#[name]#Final">
+        </po-select>
+?[end]??[jsType=number&enumComponent=&zoomComponent=&!isRangeFilter]?
+        <po-number
+          name="filter#[name,PascalCase]#"
+          class="po-md-12"
+          p-label="#[description]#"
+          [(ngModel)]="filter.#[name]#">
+        </po-number>
+?[end]??[jsType=number&enumComponent=&zoomComponent=&isRangeFilter]?
+        <po-number
+          name="filter#[name,PascalCase]#Initial"
+          class="po-md-6"
+          p-label="#[description]# Inicial"
+          [(ngModel)]="filter.#[name]#Initial">
+        </po-number>
+        <po-number
+          name="filter#[name,PascalCase]#Final"
+          class="po-md-6"
+          p-label="#[description]# Final"
+          [(ngModel)]="filter.#[name]#Final">
+        </po-number>
+?[end]??[jsType=boolean&enumComponent=&zoomComponent=&!isRangeFilter]?
+        <po-switch
+          name="filter#[name,PascalCase]#"
+          class="po-md-12"
+          p-label="#[description]#"
+          p-label-off="Não"
+            p-label-on="Sim"
+          [(ngModel)]="filter.#[name]#">
+        </po-switch>
+?[end]??[jsType=boolean&enumComponent=&zoomComponent=&isRangeFilter]?
+        <po-switch
+          name="filter#[name,PascalCase]#Initial"
+          class="po-md-6"
+          p-label="#[description]# Inicial"
+          p-label-off="Não"
+            p-label-on="Sim"
+          [(ngModel)]="filter.#[name]#Initial">
+        </po-switch>
+        <po-switch
+          name="filter#[name,PascalCase]#Final"
+          class="po-md-6"
+          p-label="#[description]# Final"
+          p-label-off="Não"
+            p-label-on="Sim"
+          [(ngModel)]="filter.#[name]#Final">
+        </po-switch>
+?[end]??[jsType=string&enumComponent=&zoomComponent=&!isRangeFilter]?
+        <po-input
+          name="filter#[name,PascalCase]#"
+          class="po-md-12"
+          p-label="#[description]#"
+          [(ngModel)]="filter.#[name]#">
+        </po-input>
+?[end]??[jsType=string&enumComponent=&zoomComponent=&isRangeFilter]?
+        <po-input
+          name="filter#[name,PascalCase]#Initial"
+          class="po-md-6"
+          p-label="#[description]# Inicial"
+          [(ngModel)]="filter.#[name]#Initial">
+        </po-input>
+        <po-input
+          name="filter#[name,PascalCase]#Final"
+          class="po-md-6"
+          p-label="#[description]# Final"
+          [(ngModel)]="filter.#[name]#Final">
+        </po-input>
+?[end]?@[end]@
+      </div>
+    </ng-template>
+  </div>
+</gps-page-list>
+
+<gps-export-data
+	#exportComponent
+	[data]="pageController.listItems"
+	[columns]="exportColumns"
+	canChoose
+	fileName="#[app.component,PascalCase]#List.csv">
+</gps-export-data>

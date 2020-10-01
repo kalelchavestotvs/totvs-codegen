@@ -1,9 +1,10 @@
 {
     "type": "template.index",
     "templates": [
-        { "id": "progress", "description": "API/BO Progress" },
-        { "id": "portinari_v1", "description": "Frontend Portinari (1.x.x)" },
-		{ "id": "poui_v2", "description": "Frontend PO-UI (2.x.x)" },
-		{ "id": "tast", "description": "Testes Automatizados Progress - TAST" }
+      { "id": "progress", "description": "API/BO Progress" },
+      { "id": "portinari_v1", "description": "Frontend Portinari 1" },
+      { "id": "poui_v2", "description": "Frontend PO-UI 2/3" },
+      { "id": "simple_poui_v2", "description": "Frontend PO-UI 2/3 Simplificado" },
+      { "id": "tast", "description": "Testes Automatizados Progress - TAST" }
     ]
 }
