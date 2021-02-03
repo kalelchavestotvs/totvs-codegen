@@ -15,7 +15,7 @@ using classes.utils.GpsUtils.
 {dbo/utils/rowerror.i}
 
 define variable expandables as character   no-undo.
-define variable startRow    as integer     no-undo.    
+define variable startRow    as integer     no-undo.
 define variable pageSize    as integer     no-undo.
 define variable queryParams as JsonObject  no-undo.
 define variable fieldList   as character   no-undo.
@@ -61,13 +61,13 @@ procedure getById:
 
     define input  parameter jsonInput  as JsonObject        no-undo.
     define output parameter jsonOutput as JsonObject        no-undo.
-    
+
 @[app.fields,isPrimary]@
     define variable #[field]#-aux as #[ablType]# no-undo.
 @[end]@
-    
+
     run setupInputParameters(input jsonInput).
-    
+
 @[app.fields,isPrimary]@
     ?[isFirst]?assign?[end]??[!isFirst]?      ?[end]? #[field]#-aux = #[ablType,ABLCast]#(pathParams:getCharacter(#[sequence]#))
 @[end]@ no-error.
@@ -77,12 +77,12 @@ procedure getById:
 @[app.fields,isPrimary]@
         input #[field]#-aux,
 @[end]@
-        output table tmp#[app.component,PascalCase]#,
+        output table tmp#[app.component,AblTempTable,PascalCase]#,
         input-output table rowErrors) no-error.
     if error-status:error
     then run insertErrorProgress(input "", input "", input-output table rowErrors).
 
-    assign jsonResult = oGpsJsonUtils:getJsonObjectFromTable(temp-table tmp#[app.component,PascalCase]#:default-buffer-handle)
+    assign jsonResult = oGpsJsonUtils:getJsonObjectFromTable(temp-table tmp#[app.component,AblTempTable,PascalCase]#:default-buffer-handle)
            jsonOutput = oGpsJsonUtils:createJsonResponse(jsonResult, temp-table RowErrors:default-buffer-handle).
 
 end procedure.
@@ -90,49 +90,49 @@ end procedure.
 procedure getByFilter:
 
     define input  parameter jsonInput  as JsonObject no-undo.
-    define output parameter jsonOutput as JsonObject no-undo.       
+    define output parameter jsonOutput as JsonObject no-undo.
 
     run setupInputParameters(input jsonInput).
 
-    empty temp-table tmp#[app.component,PascalCase]#Filter.
-    oGpsUtils:convertQueryParamToTable(queryParams, temp-table tmp#[app.component,PascalCase]#Filter:default-buffer-handle).
-                             
+    empty temp-table tmp#[app.component,AblTempFilter,PascalCase]#Filter.
+    oGpsUtils:convertQueryParamToTable(queryParams, temp-table tmp#[app.component,AblTempFilter,PascalCase]#Filter:default-buffer-handle).
+
     {hdp/hdrunpersis.i "#[app.module]#/bosau/bosau-#[app.component]#.p" "h-bosau-#[app.component]#-aux"}
     run getByFilter in h-bosau-#[app.component]#-aux (
         input  startRow,
         input  pageSize,
-        input  table tmp#[app.component,PascalCase]#Filter,
+        input  table tmp#[app.component,AblTempFilter,PascalCase]#Filter,
         output hasNext,
-        output table tmp#[app.component,PascalCase]#,
+        output table tmp#[app.component,AblTempTable,PascalCase]#,
         input-output table rowErrors) no-error.
     if error-status:error
     then run insertErrorProgress(input "", input "", input-output table rowErrors).
 
-    assign jsonArrayResult = oGpsJsonUtils:getJsonArrayFromTable(temp-table tmp#[app.component,PascalCase]#:default-buffer-handle)
+    assign jsonArrayResult = oGpsJsonUtils:getJsonArrayFromTable(temp-table tmp#[app.component,AblTempTable,PascalCase]#:default-buffer-handle)
            jsonOutput      = oGpsJsonUtils:createJsonResponse(jsonArrayResult, temp-table RowErrors:default-buffer-handle, hasNext).
-    
+
 end procedure.
 
 procedure createRecord:
 
     define input  parameter jsonInput  as JsonObject no-undo.
     define output parameter jsonOutput as JsonObject no-undo.
-   
+
     define variable jsonPayload as JsonObject no-undo.
-   
+
     run setupInputParameters(input jsonInput).
 
     assign jsonPayload = oGpsJsonUtils:longcharToJsonObject(payload).
-    oGpsUtils:convertJsonObjectsToTable(jsonPayload, temp-table tmp#[app.component,PascalCase]#:default-buffer-handle).
+    oGpsUtils:convertJsonObjectsToTable(jsonPayload, temp-table tmp#[app.component,AblTempTable,PascalCase]#:default-buffer-handle).
 
     {hdp/hdrunpersis.i "#[app.module]#/bosau/bosau-#[app.component]#.p" "h-bosau-#[app.component]#-aux"}
     run createRecord in h-bosau-#[app.component]#-aux (
-        input-output table tmp#[app.component,PascalCase]#,
+        input-output table tmp#[app.component,AblTempTable,PascalCase]#,
         input-output table rowErrors) no-error.
     if error-status:error
     then run insertErrorProgress(input "", input "", input-output table rowErrors).
-    
-    assign jsonResult = oGpsJsonUtils:getJsonObjectFromTable(temp-table tmp#[app.component,PascalCase]#:default-buffer-handle)
+
+    assign jsonResult = oGpsJsonUtils:getJsonObjectFromTable(temp-table tmp#[app.component,AblTempTable,PascalCase]#:default-buffer-handle)
            jsonOutput = oGpsJsonUtils:createJsonResponse(jsonResult, temp-table RowErrors:default-buffer-handle).
 
 end.
@@ -141,22 +141,22 @@ procedure updateRecord:
 
     define input  parameter jsonInput  as JsonObject no-undo.
     define output parameter jsonOutput as JsonObject no-undo.
-   
+
     define variable jsonPayload as JsonObject no-undo.
-   
+
     run setupInputParameters(input jsonInput).
-   
+
     assign jsonPayload = oGpsJsonUtils:longcharToJsonObject(payload).
-    oGpsUtils:convertJsonObjectsToTable(jsonPayload, temp-table tmp#[app.component,PascalCase]#:default-buffer-handle).
-   
+    oGpsUtils:convertJsonObjectsToTable(jsonPayload, temp-table tmp#[app.component,AblTempTable,PascalCase]#:default-buffer-handle).
+
     {hdp/hdrunpersis.i "#[app.module]#/bosau/bosau-#[app.component]#.p" "h-bosau-#[app.component]#-aux"}
     run updateRecord in h-bosau-#[app.component]#-aux (
-        input-output table tmp#[app.component,PascalCase]#,
+        input-output table tmp#[app.component,AblTempTable,PascalCase]#,
         input-output table rowErrors) no-error.
     if error-status:error
     then run insertErrorProgress(input "", input "", input-output table rowErrors).
-    
-    assign jsonResult = oGpsJsonUtils:getJsonObjectFromTable(temp-table tmp#[app.component,PascalCase]#:default-buffer-handle)
+
+    assign jsonResult = oGpsJsonUtils:getJsonObjectFromTable(temp-table tmp#[app.component,AblTempTable,PascalCase]#:default-buffer-handle)
            jsonOutput = oGpsJsonUtils:createJsonResponse(jsonResult, temp-table RowErrors:default-buffer-handle).
 
 end procedure.
@@ -165,17 +165,17 @@ procedure removeRecord:
 
     define input  parameter jsonInput  as JsonObject no-undo.
     define output parameter jsonOutput as JsonObject no-undo.
-    
+
 @[app.fields,isPrimary]@
     define variable #[field]#-aux as #[ablType]# no-undo.
 @[end]@
-    
+
     run setupInputParameters(input jsonInput).
-    
+
 @[app.fields,isPrimary]@
     ?[isFirst]?assign?[end]??[!isFirst]?      ?[end]? #[field]#-aux = #[ablType,ABLCast]#(pathParams:getCharacter(#[sequence]#))
 @[end]@ no-error.
-    
+
     {hdp/hdrunpersis.i "#[app.module]#/bosau/bosau-#[app.component]#.p" "h-bosau-#[app.component]#-aux"}
     run removeRecord in h-bosau-#[app.component]#-aux (
 @[app.fields,isPrimary]@

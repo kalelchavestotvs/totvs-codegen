@@ -1,5 +1,47 @@
 import { TemplateFileData, TextLineBreaker, PropertyValue } from 'model';
 
+function _ablTempFilter(attr:PropertyValue): PropertyValue {
+  if (!attr) return null
+
+  let words = attr.value.split('-');
+
+  if (attr.value.length - words.length - 1 > 23) {
+
+    for (let index = words.length - 1; index > 0; index--) {
+      words[index] = words[index].substring(0,1);
+
+      attr.value = words.map(w => { return w.substring(0) }).join('-');
+
+      if (attr.value.length - words.length - 1 <= 23) {
+        break;
+      }
+    }
+  }
+
+  return attr
+}
+
+function _ablTempTable(attr:PropertyValue): PropertyValue {
+  if (!attr) return null
+
+  let words = attr.value.split('-');
+
+  if (attr.value.length - words.length - 1 > 29) {
+
+    for (let index = words.length - 1; index > 0; index--) {
+      words[index] = words[index].substring(0,1);
+
+      attr.value = words.map(w => { return w.substring(0) }).join('-');
+
+      if (attr.value.length - words.length - 1 <= 29) {
+        break;
+      }
+    }
+  }
+
+  return attr
+}
+
 function _pascalCase(attr:PropertyValue): PropertyValue {
     if (!attr) return null
     let words = attr.value.split('-')
@@ -68,7 +110,9 @@ const convertFunctions = {
     upper: _upper.bind(this),
     lower: _lower.bind(this),
     ablcast: _ablCast.bind(this),
-    negate: _negate.bind(this)
+    negate: _negate.bind(this),
+    abltempfilter: _ablTempFilter.bind(this),
+    abltemptable: _ablTempTable.bind(this)
 }
 
 const specialChars = {
@@ -130,7 +174,7 @@ export class TemplateParser {
                         replaceText += this.parseStr(text,loopData)
                     })
                 }
-                
+
                 txt = txt.substring(0,loopStart.index) + replaceText + txt.substring(reLoopEnd.lastIndex)
                 reLoopStart.lastIndex = loopStart.index-1
                 loopStart = reLoopStart.exec(txt)
@@ -167,7 +211,7 @@ export class TemplateParser {
         txt = txt.replace(this.regexAttribute,(subs:string,attr:string) => {
             try {
                 return this.applyAttribute(attr,data)
-            } 
+            }
             catch {
                 return subs
             }
