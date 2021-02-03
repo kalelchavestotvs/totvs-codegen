@@ -10,7 +10,7 @@ using classes.test.*.
 {rtp/rtrowerror.i}
 
 // temp-tables utilizadas para comparacao de dados de saida
-def temp-table GPS_#[app.component,PascalCase]# like tmp#[app.component,PascalCase]#.
+def temp-table GPS_#[app.component,PascalCase]# like tmp#[app.component,AblTempTable,PascalCase]#.
 def temp-table GPS_RowErrors like RowErrors.
 
 def var h-bosau-#[app.component]#-aux as handle no-undo.
@@ -22,9 +22,9 @@ procedure piBeforeExecute:
 	assign cFilePath = replace(file-info:full-pathname, "~\", "/")
 	       cFilePath = cFilePath + "/".
 end procedure.
- 
+
 procedure piExecute:
-    
+
     define output parameter lPassed as logical  no-undo.
     define output parameter cText   as longchar no-undo.
 
@@ -45,17 +45,17 @@ procedure piExecute:
     end finally.
 
 end procedure.
- 
+
 procedure executa-teste:
 
     // define variaveis de controle de entrada e saida
 	def var oFd#[app.component,PascalCase]# as AssertFieldCollection no-undo.
 	def var oFdRowErrors as AssertFieldCollection no-undo.
-    
+
     // variaveis de controle
     def var lHasNext as log no-undo.
     def var lError as log no-undo.
-    def var cReturn as char no-undo.   
+    def var cReturn as char no-undo.
     def var h-bosau-#[app.component]#-aux as handle no-undo.
 
 	// lista de campos a adicionar/ignorar para na comparacao do resultado
@@ -71,14 +71,14 @@ procedure executa-teste:
 
     // atribui dados de entrada/saida
 	for first #[app.table]#:
-        create tmp#[app.component,PascalCase]#Filter.
-        assign 
+        create tmp#[app.component,AblTempFilter,PascalCase]#Filter.
+        assign
 @[app.fields,isFilter&!isRangeFilter]@
-	        tmp#[app.component,PascalCase]#Filter.#[field]# = #[app.table]#.#[field]#
+	        tmp#[app.component,AblTempFilter,PascalCase]#Filter.#[field]# = #[app.table]#.#[field]#
 @[end]@
 @[app.fields,isFilter&isRangeFilter]@
-	        tmp#[app.component,PascalCase]#Filter.#[field]#-ini = #[app.table]#.#[field]#
-            tmp#[app.component,PascalCase]#Filter.#[field]#-fim = #[app.table]#.#[field]#
+	        tmp#[app.component,AblTempFilter,PascalCase]#Filter.#[field]#-ini = #[app.table]#.#[field]#
+            tmp#[app.component,AblTempFilter,PascalCase]#Filter.#[field]#-fim = #[app.table]#.#[field]#
 @[end]@.
 
         create GPS_#[app.component,PascalCase]#.
@@ -90,21 +90,21 @@ procedure executa-teste:
     run getByFilter in h-bosau-#[app.component]#-aux (
         input 1,
         input 1,
-        input table tmp#[app.component,PascalCase]#Filter,
+        input table tmp#[app.component,AblTempFilter,PascalCase]#Filter,
         output lHasNext,
-        output table tmp#[app.component,PascalCase]#,
+        output table tmp#[app.component,AblTempTable,PascalCase]#,
 		input-output table rowErrors
     ) no-error.
 
     // processa saida
     assign cReturn = return-value
            lError  = error-status:error.
- 
+
     // realiza comparacoes
 	oAssert:false("error-status", lError).
 	oAssert:equal("return-value", "OK", cReturn).
     oAssert:false("has-next", lHasNext).
-	oAssert:matchTable(temp-table GPS_#[app.component,PascalCase]#:default-buffer-handle, temp-table tmp#[app.component,PascalCase]#:default-buffer-handle, oFd#[app.component,PascalCase]#).
+	oAssert:matchTable(temp-table GPS_#[app.component,PascalCase]#:default-buffer-handle, temp-table tmp#[app.component,AblTempTable,PascalCase]#:default-buffer-handle, oFd#[app.component,PascalCase]#).
 	oAssert:matchTable(temp-table GPS_RowErrors:default-buffer-handle, temp-table rowErrors:default-buffer-handle, oFdRowErrors).
 
     finally:
@@ -136,6 +136,6 @@ procedure cria-configuracao-campos:
         end.
     end.
 end procedure.
- 
+
 procedure piAfterExecute:
 end procedure.

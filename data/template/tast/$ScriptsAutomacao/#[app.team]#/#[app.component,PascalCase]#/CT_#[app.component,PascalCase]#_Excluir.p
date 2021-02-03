@@ -21,9 +21,9 @@ procedure piBeforeExecute:
 	assign cFilePath = replace(file-info:full-pathname, "~\", "/")
 	       cFilePath = cFilePath + "/".
 end procedure.
- 
+
 procedure piExecute:
-    
+
     define output parameter lPassed as logical  no-undo.
     define output parameter cText   as longchar no-undo.
 
@@ -44,7 +44,7 @@ procedure piExecute:
     end finally.
 
 end procedure.
- 
+
 procedure executa-teste:
 
     // define variaveis de controle de entrada e saida
@@ -52,10 +52,10 @@ procedure executa-teste:
 	def var #[field]#-aux like #[app.table]#.#[field]# no-undo.
 @[end]@
 	def var oFdRowErrors as AssertFieldCollection no-undo.
-    
+
     // variaveis de controle
     def var lError as log no-undo.
-    def var cReturn as char no-undo.   
+    def var cReturn as char no-undo.
     def var h-bosau-#[app.component]#-aux as handle no-undo.
 
 	// lista de campos a adicionar/ignorar para na comparacao da rowErrors
@@ -66,7 +66,7 @@ procedure executa-teste:
 
     // atribui dados de entrada/saida
 	for first #[app.table]#:
-        assign 
+        assign
 @[app.fields,isPrimary]@
 	        #[field]#-aux = #[app.table]#.#[field]#
 @[end]@.
@@ -84,7 +84,7 @@ procedure executa-teste:
     // processa saida
     assign cReturn = return-value
            lError  = error-status:error.
- 
+
     // realiza comparacoes
 	oAssert:false("error-status", lError).
 	oAssert:matchTable(temp-table GPS_RowErrors:default-buffer-handle, temp-table rowErrors:default-buffer-handle, oFdRowErrors).
@@ -117,6 +117,6 @@ procedure cria-configuracao-campos:
         end.
     end.
 end procedure.
- 
+
 procedure piAfterExecute:
 end procedure.

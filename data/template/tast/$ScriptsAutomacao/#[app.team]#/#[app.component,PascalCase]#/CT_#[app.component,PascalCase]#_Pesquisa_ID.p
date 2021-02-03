@@ -10,7 +10,7 @@ using classes.test.*.
 {rtp/rtrowerror.i}
 
 // temp-tables utilizadas para comparacao de dados de saida
-def temp-table GPS_#[app.component,PascalCase]# like tmp#[app.component,PascalCase]#.
+def temp-table GPS_#[app.component,PascalCase]# like tmp#[app.component,AblTempTable,PascalCase]#.
 def temp-table GPS_RowErrors like RowErrors.
 
 def var h-bosau-#[app.component]#-aux as handle no-undo.
@@ -22,9 +22,9 @@ procedure piBeforeExecute:
 	assign cFilePath = replace(file-info:full-pathname, "~\", "/")
 	       cFilePath = cFilePath + "/".
 end procedure.
- 
+
 procedure piExecute:
-    
+
     define output parameter lPassed as logical  no-undo.
     define output parameter cText   as longchar no-undo.
 
@@ -45,7 +45,7 @@ procedure piExecute:
     end finally.
 
 end procedure.
- 
+
 procedure executa-teste:
 
     // define variaveis de controle de entrada e saida
@@ -54,10 +54,10 @@ procedure executa-teste:
 @[end]@
 	def var oFd#[app.component,PascalCase]# as AssertFieldCollection no-undo.
 	def var oFdRowErrors as AssertFieldCollection no-undo.
-    
+
     // variaveis de controle
     def var lError as log no-undo.
-    def var cReturn as char no-undo.   
+    def var cReturn as char no-undo.
     def var h-bosau-#[app.component]#-aux as handle no-undo.
 
 	// lista de campos a adicionar/ignorar para na comparacao do resultado
@@ -73,7 +73,7 @@ procedure executa-teste:
 
     // atribui dados de entrada/saida
 	for first #[app.table]#:
-        assign 
+        assign
 @[app.fields,isPrimary]@
 	        #[field]#-aux = #[app.table]#.#[field]#
 @[end]@.
@@ -88,18 +88,18 @@ procedure executa-teste:
 @[app.fields,isPrimary]@
 	    input #[field]#-aux,
 @[end]@
-		output table tmp#[app.component,PascalCase]#,
+		output table tmp#[app.component,AblTempTable,PascalCase]#,
 		input-output table rowErrors
     ) no-error.
 
     // processa saida
     assign cReturn = return-value
            lError  = error-status:error.
- 
+
     // realiza comparacoes
 	oAssert:false("error-status", lError).
 	oAssert:equal("return-value", "OK", cReturn).
-	oAssert:matchTable(temp-table GPS_#[app.component,PascalCase]#:default-buffer-handle, temp-table tmp#[app.component,PascalCase]#:default-buffer-handle, oFd#[app.component,PascalCase]#).
+	oAssert:matchTable(temp-table GPS_#[app.component,PascalCase]#:default-buffer-handle, temp-table tmp#[app.component,AblTempTable,PascalCase]#:default-buffer-handle, oFd#[app.component,PascalCase]#).
 	oAssert:matchTable(temp-table GPS_RowErrors:default-buffer-handle, temp-table rowErrors:default-buffer-handle, oFdRowErrors).
 
     finally:
@@ -131,6 +131,6 @@ procedure cria-configuracao-campos:
         end.
     end.
 end procedure.
- 
+
 procedure piAfterExecute:
 end procedure.

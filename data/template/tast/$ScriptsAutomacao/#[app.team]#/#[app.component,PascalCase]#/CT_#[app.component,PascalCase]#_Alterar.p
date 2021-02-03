@@ -10,7 +10,7 @@ using classes.test.*.
 {rtp/rtrowerror.i}
 
 // temp-tables utilizadas para comparacao de dados de saida
-def temp-table GPS_#[app.component,PascalCase]# like tmp#[app.component,PascalCase]#.
+def temp-table GPS_#[app.component,PascalCase]# like tmp#[app.component,AblTempTable,PascalCase]#.
 def temp-table GPS_RowErrors like RowErrors.
 
 def var h-bosau-#[app.component]#-aux as handle no-undo.
@@ -22,9 +22,9 @@ procedure piBeforeExecute:
 	assign cFilePath = replace(file-info:full-pathname, "~\", "/")
 	       cFilePath = cFilePath + "/".
 end procedure.
- 
+
 procedure piExecute:
-    
+
     define output parameter lPassed as logical  no-undo.
     define output parameter cText   as longchar no-undo.
 
@@ -45,16 +45,16 @@ procedure piExecute:
     end finally.
 
 end procedure.
- 
+
 procedure executa-teste:
 
     // define variaveis de controle de entrada e saida
 	def var oFd#[app.component,PascalCase]# as AssertFieldCollection no-undo.
 	def var oFdRowErrors as AssertFieldCollection no-undo.
-    
+
     // variaveis de controle
     def var lError as log no-undo.
-    def var cReturn as char no-undo.   
+    def var cReturn as char no-undo.
     def var h-bosau-#[app.component]#-aux as handle no-undo.
 
 	// lista de campos a adicionar/ignorar para na comparacao do resultado
@@ -70,33 +70,33 @@ procedure executa-teste:
 
     // atribui dados de entrada/saida
 	for last #[app.table]#:
-        create tmp#[app.component,PascalCase]#.
-        buffer-copy #[app.table]# to tmp#[app.component,PascalCase]#.
+        create tmp#[app.component,AblTempTable,PascalCase]#.
+        buffer-copy #[app.table]# to tmp#[app.component,AblTempTable,PascalCase]#.
 
         // altera campos
         assign
 @[app.fields,!isPrimary&isEditable]@
-            tmp#[app.component,PascalCase]#.#[field]#  = ?[ablType=logical]?not ?[end]?tmp#[app.component,PascalCase]#.#[field]#?[ablType=character]? + "Z"?[end]??[!ablType=character&!ablType=logical]? + 1?[end]?
+            tmp#[app.component,AblTempTable,PascalCase]#.#[field]#  = ?[ablType=logical]?not ?[end]?tmp#[app.component,AblTempTable,PascalCase]#.#[field]#?[ablType=character]? + "Z"?[end]??[!ablType=character&!ablType=logical]? + 1?[end]?
 @[end]@.
 
         create GPS_#[app.component,PascalCase]#.
-        buffer-copy tmp#[app.component,PascalCase]# to GPS_#[app.component,PascalCase]#.
+        buffer-copy tmp#[app.component,AblTempTable,PascalCase]# to GPS_#[app.component,PascalCase]#.
     end.
 
     // executa teste
     {hdp/hdrunpersis.i "#[app.module]#/bosau/bosau-#[app.component]#.p" "h-bosau-#[app.component]#-aux"}
     run updateRecord in h-bosau-#[app.component]#-aux (
-		input-output table tmp#[app.component,PascalCase]#,
+		input-output table tmp#[app.component,AblTempTable,PascalCase]#,
 		input-output table rowErrors
     ) no-error.
 
     // processa saida
     assign cReturn = return-value
            lError  = error-status:error.
- 
+
     // realiza comparacoes
 	oAssert:false("error-status", lError).
-	oAssert:matchTable(temp-table GPS_#[app.component,PascalCase]#:default-buffer-handle, temp-table tmp#[app.component,PascalCase]#:default-buffer-handle, oFd#[app.component,PascalCase]#).
+	oAssert:matchTable(temp-table GPS_#[app.component,PascalCase]#:default-buffer-handle, temp-table tmp#[app.component,AblTempTable,PascalCase]#:default-buffer-handle, oFd#[app.component,PascalCase]#).
 	oAssert:matchTable(temp-table GPS_RowErrors:default-buffer-handle, temp-table rowErrors:default-buffer-handle, oFdRowErrors).
 
     finally:
@@ -128,6 +128,6 @@ procedure cria-configuracao-campos:
         end.
     end.
 end procedure.
- 
+
 procedure piAfterExecute:
 end procedure.
