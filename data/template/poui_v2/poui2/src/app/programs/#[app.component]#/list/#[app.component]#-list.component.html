@@ -90,12 +90,14 @@
           name="filter#[name,PascalCase]#Initial"
           class="po-md-6"
           p-label="#[description]# Inicial"
+          [p-max]="filter.#[name]#Final"
           [(ngModel)]="filter.#[name]#Initial">
         </po-number>
         <po-number
           name="filter#[name,PascalCase]#Final"
           class="po-md-6"
           p-label="#[description]# Final"
+          [p-min]="filter.#[name]#Initial"
           [(ngModel)]="filter.#[name]#Final">
         </po-number>
 ?[end]??[jsType=boolean&enumComponent=&zoomComponent=&!isRangeFilter]?
@@ -104,7 +106,7 @@
           class="po-md-12"
           p-label="#[description]#"
           p-label-off="Não"
-            p-label-on="Sim"
+          p-label-on="Sim"
           [(ngModel)]="filter.#[name]#">
         </po-switch>
 ?[end]??[jsType=boolean&enumComponent=&zoomComponent=&isRangeFilter]?
@@ -113,7 +115,7 @@
           class="po-md-6"
           p-label="#[description]# Inicial"
           p-label-off="Não"
-            p-label-on="Sim"
+          p-label-on="Sim"
           [(ngModel)]="filter.#[name]#Initial">
         </po-switch>
         <po-switch
@@ -136,12 +138,14 @@
           name="filter#[name,PascalCase]#Initial"
           class="po-md-6"
           p-label="#[description]# Inicial"
+          [p-max]="filter.#[name]#Final"
           [(ngModel)]="filter.#[name]#Initial">
         </po-input>
         <po-input
           name="filter#[name,PascalCase]#Final"
           class="po-md-6"
           p-label="#[description]# Final"
+          [p-min]="filter.#[name]#Initial"
           [(ngModel)]="filter.#[name]#Final">
         </po-input>
 ?[end]?@[end]@
