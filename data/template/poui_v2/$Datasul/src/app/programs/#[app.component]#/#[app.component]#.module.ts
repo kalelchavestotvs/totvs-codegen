@@ -6,6 +6,7 @@ import { AppComponent } from '../../app.component';
 import { #[app.component,PascalCase]#RoutingModule } from './#[app.component]#.routing.module';
 import { AppModule } from '../../app.module';
 import { #[app.component,PascalCase]#Service } from './services/#[app.component]#.service';
+import { ParamService } from 'totvs-gps-api';
 @[app.zooms]@
 import { #[component,PascalCase]#Zoom } from './zoom/#[component]#.zoom';
 @[end]@
@@ -25,10 +26,11 @@ import { #[component,PascalCase]#Zoom } from './zoom/#[component]#.zoom';
     #[app.component,PascalCase]#ListComponent,
   ],
   providers: [
+    ParamService,
     #[app.component,PascalCase]#Service,
 @[app.zooms]@
     #[component,PascalCase]#Zoom,
-@[end]@    
+@[end]@        
   ]
 })
 export class #[app.component,PascalCase]#Module { }

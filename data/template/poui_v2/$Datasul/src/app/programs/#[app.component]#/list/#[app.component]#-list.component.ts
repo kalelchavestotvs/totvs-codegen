@@ -4,6 +4,7 @@ import { isNullOrUndefined } from 'util';
 import { PoDialogService, PoNotificationService, PoPageAction, PoTableColumn, PoTableAction, PoSelectOption } from '@po-ui/ng-components';
 import { GpsPageListComponent, IDisclaimerConfig, GpsExportDataComponent, IExportColumn } from 'totvs-gps-controls';
 import { GpsPageFilter, GpsPageNavigation, GpsCRUDListModel } from 'totvs-gps-crud';
+import { ParamService } from 'totvs-gps-api';
 import { #[app.component,PascalCase]#Service } from '../services/#[app.component]#.service';
 import { #[app.component,PascalCase]#, I#[app.component,PascalCase]#Filter } from '../models/#[app.component]#';
 import { #[app.component,PascalCase]#Extended } from '../models/#[app.component]#-extended';
@@ -25,6 +26,7 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
   @ViewChild('gpsPageList', {static: true}) gpsPageList: GpsPageListComponent;
   @ViewChild('exportComponent', {static: false}) exportComponent: GpsExportDataComponent;
 
+  filterCacheId:string = '#[app.component]#';
   pageNavigation:GpsPageNavigation = new GpsPageNavigation();
   pageController:GpsCRUDListModel<#[app.component,PascalCase]#> = new GpsCRUDListModel<#[app.component,PascalCase]#>();
   pageFilter:GpsPageFilter<I#[app.component,PascalCase]#Filter> = new GpsPageFilter<I#[app.component,PascalCase]#Filter>();
@@ -43,7 +45,8 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
     private service:#[app.component,PascalCase]#Service,
     private router:Router,
     private dialogService:PoDialogService,
-    private notificationService:PoNotificationService
+    private notificationService:PoNotificationService,
+    private paramService:ParamService
   ) {
     this.pageNavigation.setRouter(router);
   }
@@ -54,6 +57,15 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
     this.setDisclaimerConfig();
     this.initEnums();
     this.setActions();
+    this.reloadFilter();
+  }
+
+  reloadFilter() {
+    const filter = this.paramService.popParameter(this.filterCacheId);
+    if(filter) {
+      this.pageFilter = filter;
+      this.resetSearch();
+    }
   }
 
   get filter():any{
@@ -138,6 +150,7 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
 
   private search() {
     this.gpsPageList.showLoading('Pesquisando...');
+    this.paramService.pushParameter(this.filterCacheId,this.pageFilter);
     this.service.getByFilter(this.pageFilter)
       .then(result => this.resultSearch(result))
       .finally(() => this.gpsPageList.hideLoading());
