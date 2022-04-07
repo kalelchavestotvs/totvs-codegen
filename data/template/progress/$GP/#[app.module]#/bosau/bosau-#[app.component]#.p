@@ -338,7 +338,12 @@ procedure removeRecord:
         ?[isFirst]?where?[end]??[!isFirst]?  and ?[end]? #[app.table]#.#[field]# = #[field]#-par
 @[end]@
               exclusive-lock:
-        delete #[app.table]#.
+        delete #[app.table]# no-error.
+        if error-status:error
+        then do:
+            run insertErrorProgress (input "", input "", input-output table rowErrors).
+            return "NOK".
+        end.
     end.
 
 end.
