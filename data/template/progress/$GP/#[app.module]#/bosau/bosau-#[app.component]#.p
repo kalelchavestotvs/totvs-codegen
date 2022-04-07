@@ -344,6 +344,7 @@ procedure removeRecord:
             run insertErrorProgress (input "", input "", input-output table rowErrors).
             return "NOK".
         end.
+        
     end.
 
 end.
