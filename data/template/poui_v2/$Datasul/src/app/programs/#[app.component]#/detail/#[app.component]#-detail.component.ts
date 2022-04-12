@@ -89,8 +89,9 @@ export class #[app.component,PascalCase]#DetailComponent implements OnInit {
 
 @[end]@
 @[app.fields,!zoomComponent=]@
-    this.extend#[zoom.component,PascalCase]#(result.#[name]#).then(value => { result.parseJsonToObject(new #[zoom.component,PascalCase]#().parseJsonToObject(value) )});
+    this.extend#[zoom.component,PascalCase]#(result.#[name]#).then((value:#[zoom.component,PascalCase]#) => { value instanceof #[zoom.component,PascalCase]# ? result.parseJsonToObject(new #[zoom.component,PascalCase]#().parseJsonToObject(value) ) : result.parseJsonToObject(new #[zoom.component,PascalCase]#().parseJsonToObject({#[zoom.keyField]#: result.#[name]#, #[zoom.labelField]#:'Não encontrado'}))});
 @[end]@
+
     return result;
   }
 
