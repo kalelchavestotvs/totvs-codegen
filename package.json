@@ -12,7 +12,8 @@
     "dev:backendOLD": "nodemon --watch \"src-backend/\" --exec \"ts-node src-backend/entry.ts\" -e ts",
     "dev:backend": "nodemon --watch \"src-backend/\" --exec \"npm run build:backend && npm run serve\" -e ts",
     "dev:frontend": "ng build frontend --watch",
-    "dev:data": "xcopy .\\data\\* .\\dist\\data\\  /y /s",
+    "dev:dataOLD": "xcopy .\\data\\* .\\dist\\data\\  /y /s",
+    "dev:data": "robocopy .\\data\\ .\\dist\\data\\  /E",
     "dev": "npm run dev:backend & npm run dev:frontend"
   },
   "private": true,
