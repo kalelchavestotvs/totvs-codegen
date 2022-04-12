@@ -70,10 +70,10 @@ export class #[app.component,PascalCase]#EditComponent implements OnInit {
 
   private initializeEditPage() {
     this.gpsPageEdit.showLoading('Carregando');
+    this.isNew = false;
     this.service.getByObject(this.data)
       .then(result => { 
         this.gpsPageEdit.hideLoading();
-        this.isNew = false;
         this.setData(result);
       })
       .catch(() => this.onBack());
@@ -81,6 +81,11 @@ export class #[app.component,PascalCase]#EditComponent implements OnInit {
 
   private onBack() {
     this.pageNavigation.back();
+  }
+
+  getPageTitle(){
+    let _title = "#[app.description,camelCase]#";
+    return this.isNew ? "Adicionar " + _title : "Editar " + _title;
   }
 
   onCancel() {

@@ -1,6 +1,6 @@
 <gps-page-edit 
   #gpsPageEdit
-  p-title="#[app.description]#"
+  [p-title]="getPageTitle()"
   (p-cancel)="onCancel()"
   (p-save)="onSave()">
   <ng-container *ngIf="data">
