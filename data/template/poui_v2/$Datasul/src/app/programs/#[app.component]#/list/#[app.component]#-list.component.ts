@@ -1,6 +1,5 @@
 import { Router } from '@angular/router';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { isNullOrUndefined } from 'util';
 import { PoDialogService, PoNotificationService, PoPageAction, PoTableColumn, PoTableAction, PoSelectOption } from '@po-ui/ng-components';
 import { GpsPageListComponent, IDisclaimerConfig, GpsExportDataComponent, IExportColumn } from 'totvs-gps-controls';
 import { GpsPageFilter, GpsPageNavigation, GpsCRUDListModel } from 'totvs-gps-crud';
@@ -93,7 +92,7 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
 @[app.fields,isListed]@
       { property: '?[!zoomComponent=]?$?[end]??[!enumComponent=]?$?[end]?#[name]#?[!zoomComponent=]?Description?[end]??[!enumComponent=]?Description?[end]?', label: '#[description]#' ?[ablType=logical&enumComponent=]?, type: 'boolean'?[end]??[ablType=date&enumComponent=]?, type: 'date'?[end]??[isLink]?, type: 'link', action: (value, row) => { this.onDetail(row); }?[end]?},
 @[end]@
-      { property: '$actions', label: 'Ações', type: 'icon', width: '3.5em', icons: 
+      { property: '$actions', label: 'Ações', type: 'icon', width: '3.5em', icons:
         [
           { value: 'edit', icon: 'po-icon-edit', tooltip: 'Editar', action: this.onEdit.bind(this) },
           { value: 'remove', icon: 'po-icon-delete', tooltip: 'Remover', color: 'color-07', action: this.onRemove.bind(this) }
@@ -130,9 +129,9 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
 
   //#region Pesquisa
   resetSearch() {
-    if (!isNullOrUndefined(this.pageFilter.filter.q))
+    if (this.pageFilter.filter.q)
       return this.applySimpleFilter(this.pageFilter.filter.q);
-    
+
     this.applyAdvancedFilter(this.pageFilter.filter);
   }
 
@@ -166,7 +165,7 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
     this.pageFilter.resetPage();
   }
 
-  setItensTable(itens: Object[]){        
+  setItensTable(itens: Object[]){
     itens.forEach((value) => {
         let _obj:#[app.component,PascalCase]# = new #[app.component,PascalCase]#();
         Object.assign(_obj,value);
@@ -193,10 +192,10 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
       confirm: () => {
         this.gpsPageList.showLoading('Removendo...');
         this.service.removeByObject(item)
-          .then(result => {       
-            this.gpsPageList.hideLoading();       
+          .then(result => {
+            this.gpsPageList.hideLoading();
             this.notificationService.success('Registro removido com sucesso!');
-            this.resetSearch();                
+            this.resetSearch();
           })
           .catch(() => this.gpsPageList.hideLoading());
       }
@@ -224,12 +223,12 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
     result.$#[name]#Description = #[enumComponent,PascalCase]#Enum.getDescription(result.#[name]#);
 @[end]@
 @[app.fields,!zoomComponent=]@
-    this.extend#[zoom.component,PascalCase]#(result.#[name]#).then(value => { result.$#[name]# = value });
+    this.extend#[zoom.component,PascalCase]#(result.#[name]#).then(value => { result.parseJsonToObject(new #[zoom.component,PascalCase]#().parseJsonToObject(value) )});
 @[end]@
     result.$actions = ['edit','remove'];
     return result;
   }
-  
+
 @[app.zooms]@
   private extend#[component,PascalCase]#(value) {
     let model = new #[component,PascalCase]#().parseJsonToObject({#[keyField]#: value});

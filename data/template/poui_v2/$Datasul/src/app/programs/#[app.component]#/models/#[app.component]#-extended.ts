@@ -1,4 +1,3 @@
-import { isNullOrUndefined } from 'util';
 import { #[app.component,PascalCase]# } from './#[app.component]#';
 @[app.zooms]@
 import { #[component,PascalCase]# } from './#[component]#';
@@ -6,24 +5,23 @@ import { #[component,PascalCase]# } from './#[component]#';
 
 export class #[app.component,PascalCase]#Extended extends #[app.component,PascalCase]# {
 
-    $actions:string[]; 
+    $actions:string[];
 @[app.fields,!zoomComponent=]@
-    $#[name]#:#[zoom.component,PascalCase]#;
-@[end]@
-@[app.fields,!enumComponent=]@
+    $#[name]#Description: string = 'Carregando...';
+@[end]@@[app.fields,!enumComponent=]@
+
     $#[name]#Description: string = '';
-@[end]@
-@[app.fields,!zoomComponent=]@
-    get $#[name]#Description() {
-        if (isNullOrUndefined(this.$#[name]#))
-            return '';
-        return `${this.$#[name]#.#[zoom.keyField]#} - ${this.$#[name]#.#[zoom.labelField]#}`;
-    }
 @[end]@
 
     parseJsonToObject(jsonData): #[app.component,PascalCase]#Extended {
+      @[app.fields,!zoomComponent=]@
+
+        if (jsonData instanceof #[zoom.component,PascalCase]#) {
+          this.$#[name]#Description = `${jsonData.#[zoom.keyField]#} - ${jsonData.#[zoom.labelField]#}`;
+          return;
+        }
+      @[end]@
         super.parseJsonToObject(jsonData);
         return this;
     }
-    
 }
