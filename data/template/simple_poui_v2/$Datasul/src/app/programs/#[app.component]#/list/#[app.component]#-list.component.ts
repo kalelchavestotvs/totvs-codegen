@@ -109,7 +109,7 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
   }
 
   initializePageController(){
-    this.pageController.title = '#[app.description]#';
+    this.pageController.title = '#[app.description,PascalCase]#';
     this.pageController.advancedFilterTitle = 'Filtrar busca';
   }
 

@@ -16,7 +16,7 @@ import { #[component,PascalCase]#Zoom } from '../zoom/#[component]#.zoom';
 export class #[app.component,PascalCase]#EditComponent {
 
   data:#[app.component,PascalCase]#;
-  isNew:boolean = true;
+  isNew:boolean = false;
 @[app.enums]@
   #[component,camelCase]#Options = [
     { value: ?[isNumeric]?0?[end]??[!isNumeric]?''?[end]?, label: '(Não informado)' },
@@ -30,5 +30,10 @@ export class #[app.component,PascalCase]#EditComponent {
 @[end]@
     public service:#[app.component,PascalCase]#Service
   ) { }
+
+  getPageTitle(){
+    let _title = "#[app.description,camelCase]#";
+    return this.isNew ? "Adicionar " + _title : "Editar " + _title;
+  }
 
 }

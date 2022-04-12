@@ -1,5 +1,5 @@
 <gps-crud-edit 
-  p-title="#[app.description]#"
+  [p-title]="getPageTitle()"
   program="#[app.component]#"
   [crud-service]="service"
   [(crud-data)]="data"
