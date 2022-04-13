@@ -43,7 +43,7 @@ export class #[app.component,PascalCase]#DetailComponent implements OnInit {
   ngOnInit() {
     this.gpsPageDetail.showLoading('Carregando');
     this.maintenanceController.getObjectFromRouteParams()
-      .then(result => {
+      .then((result: #[app.component,PascalCase]#) => {
         this.service.getByObject(result)
           .then(result => {
             this.gpsPageDetail.hideLoading();
@@ -90,8 +90,16 @@ export class #[app.component,PascalCase]#DetailComponent implements OnInit {
 
 @[end]@
 @[app.fields,!zoomComponent=]@
-this.extend#[zoom.component,PascalCase]#(result.#[name]#).then(value => { result.parseJsonToObject(new #[zoom.component,PascalCase]#().parseJsonToObject(value) )});
+
+    this.extend#[zoom.component,PascalCase]#(result.#[name]#).then((value:#[zoom.component,PascalCase]#) => {
+      let model = new #[zoom.component,PascalCase]#();
+      value instanceof #[zoom.component,PascalCase]# ? model = model.parseJsonToObject(value)
+      : model = model.parseJsonToObject({#[zoom.keyField]#: result.#[name]#, #[zoom.labelField]#:'Não encontrado'});
+
+      result.parseJsonToObject(model);
+    });
 @[end]@
+
     return result;
   }
 

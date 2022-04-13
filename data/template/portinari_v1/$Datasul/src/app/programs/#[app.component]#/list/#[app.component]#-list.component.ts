@@ -214,8 +214,16 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
 
 @[end]@
 @[app.fields,!zoomComponent=]@
-this.extend#[zoom.component,PascalCase]#(result.#[name]#).then(value => { result.parseJsonToObject(new #[zoom.component,PascalCase]#().parseJsonToObject(value) )});
+
+    this.extend#[zoom.component,PascalCase]#(result.#[name]#).then((value:#[zoom.component,PascalCase]#) => {
+      let model = new #[zoom.component,PascalCase]#();
+      value instanceof #[zoom.component,PascalCase]# ? model = model.parseJsonToObject(value)
+      : model = model.parseJsonToObject({#[zoom.keyField]#: result.#[name]#, #[zoom.labelField]#:'Não encontrado'});
+
+      result.parseJsonToObject(model);
+    });
 @[end]@
+
     result.$actions = ['edit','remove'];
     return result;
   }
