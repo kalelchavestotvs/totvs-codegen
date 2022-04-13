@@ -221,10 +221,12 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
     let result = new #[app.component,PascalCase]#Extended().parseJsonToObject(item);
 @[app.fields,!enumComponent=]@
     result.$#[name]#Description = #[enumComponent,PascalCase]#Enum.getDescription(result.#[name]#);
+    
 @[end]@
-@[app.fields,!zoomComponent=]@
-    this.extend#[zoom.component,PascalCase]#(result.#[name]#).then(value => { result.parseJsonToObject(new #[zoom.component,PascalCase]#().parseJsonToObject(value) )});
+@[app.fields,!zoomComponent=]@    
+    this.extend#[zoom.component,PascalCase]#(result.#[name]#).then((value:#[zoom.component,PascalCase]#) => { value instanceof #[zoom.component,PascalCase]# ? result.parseJsonToObject(new #[zoom.component,PascalCase]#().parseJsonToObject(value) ) : result.parseJsonToObject(new #[zoom.component,PascalCase]#().parseJsonToObject({#[zoom.keyField]#: result.#[name]#, #[zoom.labelField]#:'Não encontrado'}))});
 @[end]@
+
     result.$actions = ['edit','remove'];
     return result;
   }
