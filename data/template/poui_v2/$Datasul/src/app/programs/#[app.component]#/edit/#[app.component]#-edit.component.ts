@@ -38,16 +38,16 @@ export class #[app.component,PascalCase]#EditComponent implements OnInit {
     public #[component,camelCase]#Zoom: #[component,PascalCase]#Zoom,
 @[end]@
     private service:#[app.component,PascalCase]#Service,
-    private activatedRoute: ActivatedRoute, 
+    private activatedRoute: ActivatedRoute,
     private router:Router,
-    private notificationService:PoNotificationService) { 
+    private notificationService:PoNotificationService) {
       this.pageNavigation.setRouter(router);
       this.maintenanceController = new GpsCRUDMaintenancePage(activatedRoute,#[app.component,PascalCase]#);
   }
 
   ngOnInit() {
     this.maintenanceController.getObjectFromRouteParams()
-      .then(result => {
+      .then((result: #[app.component,PascalCase]#) => {
         this.data = result;
         this.initializePage();
       })
@@ -72,7 +72,7 @@ export class #[app.component,PascalCase]#EditComponent implements OnInit {
     this.gpsPageEdit.showLoading('Carregando');
     this.isNew = false;
     this.service.getByObject(this.data)
-      .then(result => { 
+      .then(result => {
         this.gpsPageEdit.hideLoading();
         this.setData(result);
       })
@@ -102,8 +102,8 @@ export class #[app.component,PascalCase]#EditComponent implements OnInit {
       .finally(() => this.gpsPageEdit.hideLoading());
   }
 
-  setData(value){  
-    if(!this.data)  
+  setData(value){
+    if(!this.data)
       this.data = new #[app.component,PascalCase]#();
     Object.assign(this.data,value);
   }

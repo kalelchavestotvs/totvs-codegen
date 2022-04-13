@@ -32,10 +32,10 @@ export class #[app.component,PascalCase]#DetailComponent implements OnInit {
     public #[component,camelCase]#Zoom: #[component,PascalCase]#Zoom,
 @[end]@
     private service:#[app.component,PascalCase]#Service,
-    private activatedRoute: ActivatedRoute, 
+    private activatedRoute: ActivatedRoute,
     private router:Router,
     private dialogService:PoDialogService,
-    private notificationService:PoNotificationService) { 
+    private notificationService:PoNotificationService) {
       this.pageNavigation.setRouter(router);
       this.maintenanceController = new GpsCRUDMaintenancePage(activatedRoute,#[app.component,PascalCase]#);
   }
@@ -43,9 +43,9 @@ export class #[app.component,PascalCase]#DetailComponent implements OnInit {
   ngOnInit() {
     this.gpsPageDetail.showLoading('Carregando');
     this.maintenanceController.getObjectFromRouteParams()
-      .then(result => {
+      .then((result: #[app.component,PascalCase]#) => {
         this.service.getByObject(result)
-          .then(result => { 
+          .then(result => {
             this.gpsPageDetail.hideLoading();
             this.setData(result);
           })
@@ -77,7 +77,7 @@ export class #[app.component,PascalCase]#DetailComponent implements OnInit {
     this.pageNavigation.editRegisterPage(this.data);
   }
 
-  setData(value){     
+  setData(value){
     this.data = this.extend#[app.component,PascalCase]#(value);
   }
 
@@ -86,13 +86,22 @@ export class #[app.component,PascalCase]#DetailComponent implements OnInit {
     let result = new #[app.component,PascalCase]#Extended().parseJsonToObject(item);
 @[app.fields,!enumComponent=]@
     result.$#[name]#Description = #[enumComponent,PascalCase]#Enum.getDescription(result.#[name]#);
+
 @[end]@
 @[app.fields,!zoomComponent=]@
-    this.extend#[zoom.component,PascalCase]#(result.#[name]#).then(value => { result.$#[name]# = value });
+    this.extend#[zoom.component,PascalCase]#(result.#[name]#).then((value:#[zoom.component,PascalCase]#) => {
+      let model = new #[zoom.component,PascalCase]#();
+      value instanceof #[zoom.component,PascalCase]#
+        ? model = model.parseJsonToObject(value)
+        : model = model.parseJsonToObject({#[zoom.keyField]#: result.#[name]#, #[zoom.labelField]#:'Não encontrado'});
+
+      result.parseJsonToObject(model);
+    });
+
 @[end]@
     return result;
   }
-  
+
 @[app.zooms]@
   private extend#[component,PascalCase]#(value) {
     let model = new #[component,PascalCase]#().parseJsonToObject({#[keyField]#: value});
