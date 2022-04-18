@@ -47,19 +47,16 @@ export class #[app.component,PascalCase]#EditComponent implements OnInit {
 
   ngOnInit() {
     this.maintenanceController.getObjectFromRouteParams()
-      .then((result: #[app.component,PascalCase]#) => {
-        this.data = result;
-        this.initializePage();
-      })
+      .then((result: #[app.component,PascalCase]#) => this.initializePage(result))
       .catch(() => this.onBack());
   }
 
-  private initializePage(){
-    if(!this.data){
+  private initializePage(data: #[app.component,PascalCase]#){
+    if(!data){
       this.initializeAddPage();
     }
     else {
-      this.initializeEditPage();
+      this.initializeEditPage(data);
     }
   }
 
@@ -68,10 +65,10 @@ export class #[app.component,PascalCase]#EditComponent implements OnInit {
     this.setData(new #[app.component,PascalCase]#());
   }
 
-  private initializeEditPage() {
+  private initializeEditPage(data: #[app.component,PascalCase]#) {
     this.gpsPageEdit.showLoading('Carregando');
     this.isNew = false;
-    this.service.getByObject(this.data)
+    this.service.getByObject(data)
       .then(result => {
         this.gpsPageEdit.hideLoading();
         this.setData(result);
