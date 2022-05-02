@@ -273,25 +273,28 @@ end.
 procedure validateRecord private:
     define input        parameter table for tmp#[app.component,AblTempTable,PascalCase]#.
     define input-output parameter table for rowErrors.
+    define var lg-error-aux as logical initial false no-undo.
 
     for first tmp#[app.component,AblTempTable,PascalCase]# no-lock:
 @[app.fields,isMandatory&ablFixedValue=&!isAuto]@
-        ?[isFirst]?if?[end]??[!isFirst]?or?[end]? tmp#[app.component,AblTempTable,PascalCase]#.#[field]# = ?
-        ?[!ablType=date]?or?[end]? ?[!ablType=date]?tmp#[app.component,AblTempTable,PascalCase]#.#[field]# =?[end]? ?[ablType=character]?""?[end]??[ablType=logical]???[end]??[!ablType=character&!ablType=logical&!ablType=date]?0?[end]?
-@[end]@
+        if tmp#[app.component,AblTempTable,PascalCase]#.#[field]# = ??[!ablType=date]?
+        or?[end]? ?[!ablType=date]?tmp#[app.component,AblTempTable,PascalCase]#.#[field]# =?[end]? ?[ablType=character]?""?[end]??[ablType=logical]???[end]??[!ablType=character&!ablType=logical&!ablType=date]?0?[end]?
         then do:
             run insertOtherError(
                 input 0,
-                input "Preencha os campos obrigatorios",
+                input "Preencha o campo '#[description,PascalCase]#'",
                 input "",
                 input "GP",
                 input "ERROR",
                 input "",
                 input-output table rowErrors).
-            return "NOK".
+            assign lg-error-aux = true.
         end.
+
+@[end]@
     end.
 
+    if lg-error-aux then return "NOK".
     return "OK".
 end procedure.
 

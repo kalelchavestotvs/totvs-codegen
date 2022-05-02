@@ -1,79 +1,86 @@
-<gps-page-edit 
+<gps-page-edit
   #gpsPageEdit
   [p-title]="getPageTitle()"
   (p-cancel)="onCancel()"
   (p-save)="onSave()">
   <ng-container *ngIf="data">
-    <div class="po-row">
 @[app.fields,ablFixedValue=]@
 ?[!zoomComponent=]?
-      <po-lookup 
-        name="#[name]#"
-        class="po-sm-12 po-md-12 po-lg-6 po-xl-6 po-offset-lg-3 po-offset-xl-3"
-        p-label="#[description]#"
-        p-required="#[isMandatory]#"
-        [p-disabled]="this.isNew ? #[isAuto]# : #[isEditable,negate]#"
-        [(ngModel)]="data.#[name]#"
-        [p-columns]="#[zoom.component,camelCase]#Zoom.COLUMNS"
-        [p-filter-service]="#[zoom.component,camelCase]#Zoom"
-        [p-field-label]="#[zoom.component,camelCase]#Zoom.FIELD_LABEL"
-        [p-field-value]="#[zoom.component,camelCase]#Zoom.FIELD_VALUE"
-        [p-field-format]="#[zoom.component,camelCase]#Zoom.fieldFormat">
-      </po-lookup>
-?[end]??[!enumComponent=]?
-      <po-select
-        name="#[name]#"
-        class="po-sm-12 po-md-12 po-lg-6 po-xl-6 po-offset-lg-3 po-offset-xl-3"
-        p-label="#[description]#"
-        p-required="#[isMandatory]#"
-        [p-disabled]="this.isNew ? #[isAuto]# : #[isEditable,negate]#"
-        [(ngModel)]="data.#[name]#"
-        [p-options]="#[enum.component,camelCase]#Options">
-      </po-select>
-?[end]??[jsType=number&enumComponent=&zoomComponent=]?
-      <po-number
-        name="#[name]#"
-        class="po-sm-12 po-md-6 po-lg-3 po-xl-3 po-offset-lg-3 po-offset-xl-3"
-        p-label="#[description]#"
-        p-maxlength="#[maxSize]#"
-        p-required="#[isMandatory]#"
-        [p-disabled]="this.isNew ? #[isAuto]# : #[isEditable,negate]#"
-        [(ngModel)]="data.#[name]#">
-      </po-number>
-      <div class="po-hidden-sm po-md-6 po-lg-6 po-xl-6">&nbsp;</div>
-?[end]??[jsType=boolean&enumComponent=&zoomComponent=]?
-      <po-switch
-        class="po-sm-12 po-md-6 po-lg-3 po-xl-3 po-offset-lg-3 po-offset-xl-3"
-        name="#[name]#"
-        p-label-off="Não"
-        p-label-on="Sim"
-        p-label="#[description]#"
-        p-required="#[isMandatory]#"
-        [p-disabled]="this.isNew ? #[isAuto]# : #[isEditable,negate]#"
-        [(ngModel)]="data.#[name]#">
-      </po-switch>
-      <div class="po-hidden-sm po-md-6 po-lg-6 po-xl-6">&nbsp;</div>
-?[end]??[jsType=Date&enumComponent=&zoomComponent=]?
-      <po-datepicker
-        name="#[name]#"
-        class="po-sm-12 po-md-6 po-lg-3 po-xl-3 po-offset-lg-3 po-offset-xl-3"
-        p-label="#[description]#"
-        p-required="#[isMandatory]#"
-        [p-disabled]="this.isNew ? #[isAuto]# : #[isEditable,negate]#"
-        [(ngModel)]="data.#[name]#">
-      </po-datepicker>
-      <div class="po-hidden-sm po-md-6 po-lg-6 po-xl-6">&nbsp;</div>
-?[end]??[jsType=string&enumComponent=&zoomComponent=]?
-      <po-input
-        name="#[name]#"
-        class="po-sm-12 po-md-12 po-lg-6 po-xl-6 po-offset-lg-3 po-offset-xl-3"
-        p-label="#[description]#"
-        p-maxlength="#[maxSize]#"
-        p-required="#[isMandatory]#"
-        [p-disabled]="this.isNew ? #[isAuto]# : #[isEditable,negate]#"
-        [(ngModel)]="data.#[name]#">
-      </po-input>
-?[end]?@[end]@
+    <div class="po-row">
+        <po-lookup
+          name="#[name]#"
+          class="po-sm-12 po-md-12 po-lg-6 po-xl-6 po-offset-lg-3 po-offset-xl-3"
+          p-label="#[description]#"
+          p-required="#[isMandatory]#"
+          [p-disabled]="this.isNew ? #[isAuto]# : #[isEditable,negate]#"
+          [(ngModel)]="data.#[name]#"
+          [p-columns]="#[zoom.component,camelCase]#Zoom.COLUMNS"
+          [p-filter-service]="#[zoom.component,camelCase]#Zoom"
+          [p-field-label]="#[zoom.component,camelCase]#Zoom.FIELD_LABEL"
+          [p-field-value]="#[zoom.component,camelCase]#Zoom.FIELD_VALUE"
+          [p-field-format]="#[zoom.component,camelCase]#Zoom.fieldFormat">
+        </po-lookup>
     </div>
+?[end]??[!enumComponent=]?
+    <div class="po-row">
+        <po-select
+          name="#[name]#"
+          class="po-sm-12 po-md-12 po-lg-6 po-xl-6 po-offset-lg-3 po-offset-xl-3"
+          p-label="#[description]#"
+          p-required="#[isMandatory]#"
+          [p-disabled]="this.isNew ? #[isAuto]# : #[isEditable,negate]#"
+          [(ngModel)]="data.#[name]#"
+          [p-options]="#[enum.component,camelCase]#Options">
+        </po-select>
+    </div>
+?[end]??[jsType=number&enumComponent=&zoomComponent=]?
+    <div class="po-row">
+        <po-number
+          name="#[name]#"
+          class="po-sm-12 po-md-6 po-lg-3 po-xl-3 po-offset-lg-3 po-offset-xl-3 po-offset-md-3"
+          p-label="#[description]#"
+          p-maxlength="#[maxSize]#"
+          p-required="#[isMandatory]#"
+          [p-disabled]="this.isNew ? #[isAuto]# : #[isEditable,negate]#"
+          [(ngModel)]="data.#[name]#">
+        </po-number>
+    </div>
+?[end]??[jsType=boolean&enumComponent=&zoomComponent=]?
+    <div class="po-row">
+        <po-switch
+          class="po-sm-12 po-md-6 po-lg-3 po-xl-3 po-offset-lg-3 po-offset-xl-3 po-offset-md-3"
+          name="#[name]#"
+          p-label-off="Não"
+          p-label-on="Sim"
+          p-label="#[description]#"
+          p-required="#[isMandatory]#"
+          [p-disabled]="this.isNew ? #[isAuto]# : #[isEditable,negate]#"
+          [(ngModel)]="data.#[name]#">
+        </po-switch>
+    </div>
+?[end]??[jsType=Date&enumComponent=&zoomComponent=]?
+    <div class="po-row">
+        <po-datepicker
+          name="#[name]#"
+          class="po-sm-12 po-md-6 po-lg-3 po-xl-3 po-offset-lg-3 po-offset-xl-3 po-offset-md-3"
+          p-label="#[description]#"
+          p-required="#[isMandatory]#"
+          [p-disabled]="this.isNew ? #[isAuto]# : #[isEditable,negate]#"
+          [(ngModel)]="data.#[name]#">
+        </po-datepicker>
+    </div>
+?[end]??[jsType=string&enumComponent=&zoomComponent=]?
+    <div class="po-row">
+        <po-input
+          name="#[name]#"
+          class="po-sm-12 po-md-12 po-lg-6 po-xl-6 po-offset-lg-3 po-offset-xl-3"
+          p-label="#[description]#"
+          p-maxlength="#[maxSize]#"
+          p-required="#[isMandatory]#"
+          [p-disabled]="this.isNew ? #[isAuto]# : #[isEditable,negate]#"
+          [(ngModel)]="data.#[name]#">
+        </po-input>
+    </div>
+?[end]?@[end]@
   </ng-container>
 </gps-page-edit>
