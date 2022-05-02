@@ -155,6 +155,13 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
       .finally(() => this.gpsPageList.hideLoading());
   }
 
+  clearEmptyFilterFields(){
+    for(let i in this.pageFilter.filter){
+      if(!this.pageFilter.filter[i])
+        this.pageFilter.filter[i] = null;
+    }
+  }
+
   resultSearch(result){
     this.pageFilter.resumeSearch(result);
     this.setItensTable(result.items);
@@ -224,13 +231,17 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
 
 @[end]@
 @[app.fields,!zoomComponent=]@
-    this.extend#[zoom.component,PascalCase]#(result.#[name]#).then((value:#[zoom.component,PascalCase]#) => {
-      let model = new #[zoom.component,PascalCase]#();
-      value instanceof #[zoom.component,PascalCase]#
-        ? model = model.parseJsonToObject(value)
-        : model = model.parseJsonToObject({#[zoom.keyField]#: result.#[name]#, #[zoom.labelField]#:'Não encontrado'});
+    this.extend#[zoom.component,PascalCase]#(result.#[name]#).then((value: #[zoom.component,PascalCase]#) => {
+        let model = new #[zoom.component,PascalCase]#();
 
-      result.parseJsonToObject(model);
+        if(value)
+          model = model.parseJsonToObject(value);
+        else
+          model = model.parseJsonToObject({#[zoom.keyField]#: result.#[name]#, #[zoom.labelField]#:'Não encontrado(a)'});
+
+        result.parseJsonToObject(model);
+    }).catch(() => {
+        result.parseJsonToObject(new #[zoom.component,PascalCase]#().parseJsonToObject({#[zoom.keyField]#: result.#[name]#, #[zoom.labelField]#:'Não encontrado(a)'}))
     });
 
 @[end]@

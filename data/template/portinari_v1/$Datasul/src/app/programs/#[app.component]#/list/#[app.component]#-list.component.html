@@ -1,4 +1,4 @@
-<gps-page-list 
+<gps-page-list
   #gpsPageList
   [p-title]="pageController.title"
   [p-actions]="pageController.actions"
@@ -8,7 +8,7 @@
   (on-advanced-search)="applyAdvancedFilter($event)"
   (before-advanced-search)="pageFilter.restoreAdvancedFilterDefaults()">
   <div class="po-row">
-    <po-table 
+    <po-table
       class="po-md-12"
       p-striped
       [p-columns]="pageController.listColumns"
@@ -36,7 +36,7 @@
         <po-lookup
           name="filter#[name,PascalCase]#Initial"
           class="po-md-6"
-          p-label="#[description]# Inicial"
+          p-label="#[description]# inicial"
           [p-columns]="#[zoom.component,camelCase]#Zoom.COLUMNS"
           [p-filter-service]="#[zoom.component,camelCase]#Zoom"
           [p-field-label]="#[zoom.component,camelCase]#Zoom.FIELD_LABEL"
@@ -47,7 +47,7 @@
         <po-lookup
           name="filter#[name,PascalCase]#Final"
           class="po-md-6"
-          p-label="#[description]# Final"
+          p-label="#[description]# final"
           [p-columns]="#[zoom.component,camelCase]#Zoom.COLUMNS"
           [p-filter-service]="#[zoom.component,camelCase]#Zoom"
           [p-field-label]="#[zoom.component,camelCase]#Zoom.FIELD_LABEL"
@@ -67,14 +67,14 @@
         <po-select
           name="filter#[name,PascalCase]#Initial"
           class="po-md-6"
-          p-label="#[description]# Inicial"
+          p-label="#[description]# inicial"
           [p-options]="#[enum.component,camelCase]#Options"
           [(ngModel)]="filter.#[name]#Initial">
         </po-select>
         <po-select
           name=filter"#[name]#Final"
           class="po-md-6"
-          p-label="#[description]# Final"
+          p-label="#[description]# final"
           [p-options]="#[enum.component,camelCase]#Options"
           [(ngModel)]="filter.#[name]#Final">
         </po-select>
@@ -89,13 +89,13 @@
         <po-number
           name="filter#[name,PascalCase]#Initial"
           class="po-md-6"
-          p-label="#[description]# Inicial"
+          p-label="#[description]# inicial"
           [(ngModel)]="filter.#[name]#Initial">
         </po-number>
         <po-number
           name="filter#[name,PascalCase]#Final"
           class="po-md-6"
-          p-label="#[description]# Final"
+          p-label="#[description]# final"
           [(ngModel)]="filter.#[name]#Final">
         </po-number>
 ?[end]??[jsType=boolean&enumComponent=&zoomComponent=&!isRangeFilter]?
@@ -111,7 +111,7 @@
         <po-switch
           name="filter#[name,PascalCase]#Initial"
           class="po-md-6"
-          p-label="#[description]# Inicial"
+          p-label="#[description]# inicial"
           p-label-off="Não"
             p-label-on="Sim"
           [(ngModel)]="filter.#[name]#Initial">
@@ -119,7 +119,7 @@
         <po-switch
           name="filter#[name,PascalCase]#Final"
           class="po-md-6"
-          p-label="#[description]# Final"
+          p-label="#[description]# final"
           p-label-off="Não"
             p-label-on="Sim"
           [(ngModel)]="filter.#[name]#Final">
@@ -135,13 +135,13 @@
         <po-input
           name="filter#[name,PascalCase]#Initial"
           class="po-md-6"
-          p-label="#[description]# Inicial"
+          p-label="#[description]# inicial"
           [(ngModel)]="filter.#[name]#Initial">
         </po-input>
         <po-input
           name="filter#[name,PascalCase]#Final"
           class="po-md-6"
-          p-label="#[description]# Final"
+          p-label="#[description]# final"
           [(ngModel)]="filter.#[name]#Final">
         </po-input>
 ?[end]?@[end]@
