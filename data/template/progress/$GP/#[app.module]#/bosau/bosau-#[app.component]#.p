@@ -93,10 +93,11 @@ procedure getByFilter:
 @[end]@
 @[app.fields,isFilter&isRangeFilter]@
         if  (tmp#[app.component,AblTempFilter,PascalCase]#Filter.#[field]#-ini <> ?)
-        and (tmp#[app.component,AblTempFilter,PascalCase]#Filter.#[field]#-ini ?[ablType=character]?<> ""?[end]??[ablType=integer]?> 0?[end]??[!ablType=character&!ablType=integer]?<> ??[end]?)
+        and (tmp#[app.component,AblTempFilter,PascalCase]#Filter.#[field]#-ini ?[ablType=character]?<> ""?[end]??[ablType=integer]?> 0?[end]??[ablType=decimal]?> 0?[end]??[!ablType=character&!ablType=integer&!ablType=decimal]?<> ??[end]?)
         then oWhere:and("#[app.table]#.#[field]#", tmp#[app.component,AblTempFilter,PascalCase]#Filter.#[field]#-ini, oWhere:OPERATOR_GE).
+
         if  (tmp#[app.component,AblTempFilter,PascalCase]#Filter.#[field]#-fim <> ?)
-        and (tmp#[app.component,AblTempFilter,PascalCase]#Filter.#[field]#-fim ?[ablType=character]?<> ""?[end]??[ablType=integer]?> 0?[end]??[!ablType=character&!ablType=integer]?<> ??[end]?)
+        and (tmp#[app.component,AblTempFilter,PascalCase]#Filter.#[field]#-fim ?[ablType=character]?<> ""?[end]??[ablType=integer]?> 0?[end]??[ablType=decimal]?> 0?[end]??[!ablType=character&!ablType=integer&!ablType=decimal]?<> ??[end]?)
         then oWhere:and("#[app.table]#.#[field]#", tmp#[app.component,AblTempFilter,PascalCase]#Filter.#[field]#-fim, oWhere:OPERATOR_LE).
 
 @[end]@
@@ -272,29 +273,27 @@ end.
 
 procedure validateRecord private:
     define input        parameter table for tmp#[app.component,AblTempTable,PascalCase]#.
-    define input-output parameter table for rowErrors.
-    define var lg-error-aux as logical initial false no-undo.
+    define input-output parameter table for rowErrors.    
 
     for first tmp#[app.component,AblTempTable,PascalCase]# no-lock:
 @[app.fields,isMandatory&ablFixedValue=&!isAuto]@
         if tmp#[app.component,AblTempTable,PascalCase]#.#[field]# = ??[!ablType=date]?
         or?[end]? ?[!ablType=date]?tmp#[app.component,AblTempTable,PascalCase]#.#[field]# =?[end]? ?[ablType=character]?""?[end]??[ablType=logical]???[end]??[!ablType=character&!ablType=logical&!ablType=date]?0?[end]?
-        then do:
-            run insertOtherError(
+        then run insertOtherError(
                 input 0,
                 input "Preencha o campo '#[description,PascalCase]#'",
                 input "",
                 input "GP",
                 input "ERROR",
                 input "",
-                input-output table rowErrors).
-            assign lg-error-aux = true.
-        end.
+                input-output table rowErrors).                    
 
 @[end]@
     end.
 
-    if lg-error-aux then return "NOK".
+    if containsAnyError(input table rowErrors)
+    then return "NOK".
+    
     return "OK".
 end procedure.
 
