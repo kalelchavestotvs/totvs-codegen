@@ -137,6 +137,7 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
 
   private search() {
     this.gpsPageList.showLoading('Pesquisando...');
+    this.clearEmptyFilterFields();
     this.service.getByFilter(this.pageFilter)
       .then(result => {
         this.gpsPageList.hideLoading();

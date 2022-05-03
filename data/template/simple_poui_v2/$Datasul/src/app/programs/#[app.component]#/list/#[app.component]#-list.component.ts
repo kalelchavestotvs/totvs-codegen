@@ -150,10 +150,18 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
 
   private search() {
     this.gpsPageList.showLoading('Pesquisando...');
+    this.clearEmptyFilterFields();
     this.paramService.pushParameter(this.filterCacheId,this.pageFilter);
     this.service.getByFilter(this.pageFilter)
       .then(result => this.resultSearch(result))
       .finally(() => this.gpsPageList.hideLoading());
+  }
+
+  clearEmptyFilterFields(){
+    for(let i in this.pageFilter.filter){      
+      if(!this.pageFilter.filter[i])
+        this.pageFilter.filter[i] = null;
+    }
   }
 
   resultSearch(result){
