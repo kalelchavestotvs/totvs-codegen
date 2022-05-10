@@ -4,6 +4,7 @@ import { PoDialogService, PoNotificationService, PoPageAction, PoTableColumn, Po
 import { GpsPageListComponent, IDisclaimerConfig, GpsExportDataComponent, IExportColumn } from 'totvs-gps-controls';
 import { GpsPageFilter, GpsPageNavigation, GpsCRUDListModel } from 'totvs-gps-crud';
 import { ParamService } from 'totvs-gps-api';
+import { TotvsGpsDateUtils } from 'totvs-gps-utils';
 import { #[app.component,PascalCase]#Service } from '../services/#[app.component]#.service';
 import { #[app.component,PascalCase]#, I#[app.component,PascalCase]#Filter } from '../models/#[app.component]#';
 import { #[app.component,PascalCase]#Extended } from '../models/#[app.component]#-extended';
@@ -102,7 +103,7 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
 
     this.exportColumns = [
 @[app.fields,isVisible]@
-      { property: '?[!zoomComponent=]?$?[end]??[!enumComponent=]?$?[end]?#[name]#?[!zoomComponent=]?Description?[end]??[!enumComponent=]?Description?[end]?', label: '#[description]#'?[ablType=date]?, transform: (value) => { return (value ? new Date(value).toLocaleDateString() : '') }?[end]??[ablType=logical]?, transform: (value) => { return (value == 'true' ? 'Sim' : 'Não') }?[end]? },
+      { property: '?[!zoomComponent=]?$?[end]??[!enumComponent=]?$?[end]?#[name]#?[!zoomComponent=]?Description?[end]??[!enumComponent=]?Description?[end]?', label: '#[description]#'?[ablType=date]?, transform: (value) => { return (value && value != 'null' ? TotvsGpsDateUtils.getInstance().convertDate(value).toLocaleDateString() : '') }?[end]??[ablType=logical]?, transform: (value) => { return (value == 'true' ? 'Sim' : 'Não') }?[end]? },
 @[end]@
     ];
   }
