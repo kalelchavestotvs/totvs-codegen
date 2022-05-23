@@ -32,8 +32,7 @@ ALTERE A PASTA /bootstrap PELA PASTA PADRAO DO PROJETO
             "production": {
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
+              "sourceMap": false,              
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,

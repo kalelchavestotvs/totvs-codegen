@@ -144,6 +144,19 @@
           p-label="#[description]# Final"
           [(ngModel)]="filter.#[name]#Final">
         </po-input>
+?[end]??[jsType=date&enumComponent=&zoomComponent=&isRangeFilter]?
+        <po-datepicker
+          name="filter#[name,PascalCase]#Initial"
+          class="po-md-6"
+          p-label="#[description]# inicial"
+          [(ngModel)]="filter.#[name]#Initial">
+        </po-datepicker>
+        <po-datepicker
+          name="filter#[name,PascalCase]#Final"
+          class="po-md-6"
+          p-label="#[description]# final"
+          [(ngModel)]="filter.#[name]#Final">
+        </po-datepicker>
 ?[end]?@[end]@
       </div>
     </ng-template>
