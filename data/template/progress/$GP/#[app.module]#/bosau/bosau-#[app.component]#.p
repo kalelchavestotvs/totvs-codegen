@@ -1,6 +1,16 @@
 using classes.query.*.
 using classes.utils.*.
 
+/****************************
+    Programa .....: #[app.component]#.p
+    Data .........: #[app.appCreationDate]#
+    Empresa ......: TOTVS SAUDE
+    Equipe........: #[app.team]#
+    Programador ..: xxxxx
+    Objetivo .....: Programa responsavel por processar os dados da tela
+                    #[app.description,pascalCase]#
+***************************/
+
 {include/i-prgvrs.i BOSAU-#[app.component,Upper]# 2.00.02.001 } /*** 010201 ***/
 
 &IF "{&EMSFND_VERSION}" >= "1.00" &THEN
