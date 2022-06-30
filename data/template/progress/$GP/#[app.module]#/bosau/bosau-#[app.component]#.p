@@ -3,7 +3,7 @@ using classes.utils.*.
 
 /****************************
     Programa .....: #[app.component]#.p
-    Data .........: #[app.appCreationDate]#
+    Data .........: #[app.generationDateFormatted]#
     Empresa ......: TOTVS SAUDE
     Equipe........: #[app.team]#
     Programador ..: xxxxx
@@ -283,7 +283,7 @@ end.
 
 procedure validateRecord private:
     define input        parameter table for tmp#[app.component,AblTempTable,PascalCase]#.
-    define input-output parameter table for rowErrors.    
+    define input-output parameter table for rowErrors.
 
     for first tmp#[app.component,AblTempTable,PascalCase]# no-lock:
 @[app.fields,isMandatory&ablFixedValue=&!isAuto]@
@@ -296,14 +296,14 @@ procedure validateRecord private:
                 input "GP",
                 input "ERROR",
                 input "",
-                input-output table rowErrors).                    
+                input-output table rowErrors).
 
 @[end]@
     end.
 
     if containsAnyError(input table rowErrors)
     then return "NOK".
-    
+
     return "OK".
 end procedure.
 

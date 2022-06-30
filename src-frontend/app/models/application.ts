@@ -3,7 +3,6 @@ export class ApplicationIndex {
   table:string;
   component:string;
   description:string;
-  appCreationDate:String = new Date().toLocaleDateString();
 
   parseJsonToObject(data:any): ApplicationIndex {
     Object.assign(this, data);

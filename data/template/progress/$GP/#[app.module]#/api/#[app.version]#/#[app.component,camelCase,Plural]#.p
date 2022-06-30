@@ -3,7 +3,7 @@ using classes.utils.GpsUtils.
 
 /****************************
     Programa .....: #[app.component,camelCase,Plural]#.p
-    Data .........: #[app.appCreationDate]#
+    Data .........: #[app.generationDateFormatted]#
     Empresa ......: TOTVS SAUDE
     Equipe........: #[app.team]#
     Programador ..: xxxxx
@@ -79,7 +79,7 @@ procedure getById:
     run setupInputParameters(input jsonInput).
 
 @[app.fields,isPrimary]@
-    ?[isFirst]?assign?[end]? ?[!isFirst]?      ?[end]?#[field]#-aux = ?[ablType=date]?oGpsUtils:changeIsoToDate?[end]??[!ablType=date]?#[ablType,ABLCast]#?[end]?(pathParams:getCharacter(#[sequence]#))            
+    ?[isFirst]?assign?[end]? ?[!isFirst]?      ?[end]?#[field]#-aux = ?[ablType=date]?oGpsUtils:changeIsoToDate?[end]??[!ablType=date]?#[ablType,ABLCast]#?[end]?(pathParams:getCharacter(#[sequence]#))
 @[end]@ no-error.
 
     {hdp/hdrunpersis.i "#[app.module]#/bosau/bosau-#[app.component]#.p" "h-bosau-#[app.component]#-aux"}
