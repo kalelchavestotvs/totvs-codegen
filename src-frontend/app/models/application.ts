@@ -15,6 +15,7 @@ export class Application extends ApplicationIndex {
   module:string;
   version:string;
   team:string;
+  useCacheService:boolean = false;
 
   fields:ApplicationField[];
   enums:ApplicationEnum[];
@@ -52,6 +53,7 @@ export interface IFieldProperties {
   isLink?:boolean;
   isFilter?:boolean;
   isRangeFilter?:boolean;
+  hasZeroAll?:boolean;
 }
 
 export class ApplicationField implements IFieldProperties {
@@ -78,6 +80,7 @@ export class ApplicationField implements IFieldProperties {
   isLink:boolean;
   isFilter:boolean;
   isRangeFilter:boolean;
+  hasZeroAll:boolean;
 
   parseJsonToObject(data:any): ApplicationField {
     Object.assign(this, data);

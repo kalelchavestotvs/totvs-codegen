@@ -15,7 +15,7 @@ export class FieldEditComponent {
   value: ApplicationField;
   title = '';
   selectedOptions = [];
-  valueOptions: PoCheckboxGroupOption[] = [
+  baseValueOptions = [
     { value: 'isPrimary', label: 'Chave Primária' },
     { value: 'isMandatory', label: 'Obrigatório' },
     { value: 'isEditable', label: 'Editável' },
@@ -26,7 +26,10 @@ export class FieldEditComponent {
     { value: 'isFilter', label: 'Filtro' },
     { value: 'isRangeFilter', label: 'Filtro por faixa' }
   ];
-  relation:string;
+  valueOptions: PoCheckboxGroupOption[] = [
+    ...this.baseValueOptions
+  ];
+  relation:string = '';
   relations:Array<ApplicationEnum | ApplicationZoom> = [];
   relationOptions: IPoComboOptionData[] = [];
 
@@ -36,16 +39,25 @@ export class FieldEditComponent {
     this.prepareToLoad();
     this.title = this.value.field;
 
+    if(this.relation)
+      this.valueOptions = [...this.valueOptions, { value: 'hasZeroAll', label: "Suporta opção 'Todos'" }];
+    else {
+      this.valueOptions = [...this.baseValueOptions];
+      this.selectedOptions = this.selectedOptions.filter((value) => {
+        return value != 'hasZeroAll';
+      })
+    }
+
     let _modal = this.modal;
     let _value = this.value;
     let _clear = this.clear.bind(this);
     let _prepareToSave = this.prepareToSave.bind(this);
 
     return new Promise(resolve => {
-      
+
       _modal.primaryAction = {
         label: 'Salvar',
-        action: () => { 
+        action: () => {
           _prepareToSave();
           _modal.close();
           resolve(_value);
@@ -55,7 +67,7 @@ export class FieldEditComponent {
 
       _modal.secondaryAction = {
         label: 'Cancelar',
-        action: () => { 
+        action: () => {
           _modal.close();
           resolve();
           _clear();
@@ -88,7 +100,7 @@ export class FieldEditComponent {
   private prepareToLoad() {
     this.selectedOptions = [];
     this.valueOptions.forEach(item => {
-      if (!!this.value[item.value]) 
+      if (!!this.value[item.value])
         this.selectedOptions.push(item.value);
     });
 
@@ -109,6 +121,17 @@ export class FieldEditComponent {
     }
     else {
       this.relationOptions = null;
+    }
+  }
+
+  onChangeRelation(value) {
+    if (value)
+      this.valueOptions = [...this.valueOptions, { value: 'hasZeroAll', label: "Suporta opção 'Todos'" }];
+    else {
+      this.valueOptions = [...this.baseValueOptions];
+      this.selectedOptions = this.selectedOptions.filter((value) => {
+        return value != 'hasZeroAll';
+      });
     }
   }
 

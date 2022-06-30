@@ -30,7 +30,10 @@ export class #[zoom.component,PascalCase]#Zoom implements PoLookupFilter {
             .setPathParams(#[zoom.component,camelCase]#)
             .get();
     }
-    //#endregion
+
+    get(#[zoom.component,camelCase]#:#[zoom.component,PascalCase]#): Promise<#[zoom.component,PascalCase]#> {
+        return this.zoomById(#[zoom.component,camelCase]#);
+    }
 
     //#region Zoom definition
     private readonly columnNames = [

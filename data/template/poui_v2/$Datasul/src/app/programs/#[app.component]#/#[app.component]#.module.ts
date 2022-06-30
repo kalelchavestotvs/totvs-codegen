@@ -9,14 +9,15 @@ import { #[app.component,PascalCase]#Service } from './services/#[app.component]
 import { ParamService } from 'totvs-gps-api';
 @[app.zooms]@
 import { #[component,PascalCase]#Zoom } from './zoom/#[component]#.zoom';
-@[end]@
+@[end]@?[app.useCacheService]?
+import { TotvsGpsCacheService } from 'totvs-gps-services';?[end]?
 
 @NgModule({
   bootstrap: [AppComponent],
   imports: [
-    #[app.component,PascalCase]#RoutingModule,    
+    #[app.component,PascalCase]#RoutingModule,
     AppModule
-  ],  
+  ],
   declarations: [
     #[app.component,PascalCase]#ListComponent,
     #[app.component,PascalCase]#EditComponent,
@@ -27,10 +28,11 @@ import { #[component,PascalCase]#Zoom } from './zoom/#[component]#.zoom';
   ],
   providers: [
     ParamService,
-    #[app.component,PascalCase]#Service,
+    #[app.component,PascalCase]#Service,?[app.useCacheService]?
+    TotvsGpsCacheService,?[end]?
 @[app.zooms]@
     #[component,PascalCase]#Zoom,
-@[end]@        
+@[end]@
   ]
 })
 export class #[app.component,PascalCase]#Module { }
