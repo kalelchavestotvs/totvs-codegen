@@ -110,6 +110,7 @@ export class ApplicationZoom {
   labelField:string;
   keyField:string;
   isNumeric:boolean;
+  hasZeroAll?:boolean;
 
   parseJsonToObject(data:any): ApplicationZoom {
     Object.assign(this, data);

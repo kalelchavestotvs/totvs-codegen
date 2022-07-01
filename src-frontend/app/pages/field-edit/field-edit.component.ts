@@ -39,7 +39,7 @@ export class FieldEditComponent {
     this.prepareToLoad();
     this.title = this.value.field;
 
-    if(this.relation)
+    if(this.relation && this.relation.includes('zoom'))
       this.valueOptions = [...this.valueOptions, { value: 'hasZeroAll', label: "Suporta opção 'Todos'" }];
     else {
       this.valueOptions = [...this.baseValueOptions];
@@ -88,12 +88,21 @@ export class FieldEditComponent {
     });
     this.value.enumComponent = null;
     this.value.zoomComponent = null;
+
     if (this.relation && this.relationOptions) {
       let _r = this.relationOptions.find(item => item.value == this.relation);
       if (_r.$data instanceof ApplicationEnum)
         this.value.enumComponent = _r.$data.component;
-      else if (_r.$data instanceof ApplicationZoom)
+      else if (_r.$data instanceof ApplicationZoom){
         this.value.zoomComponent = _r.$data.application;
+        this.relations.forEach((value) => {
+          if(value instanceof ApplicationZoom && value.application == this.value.zoomComponent && this.selectedOptions.includes('hasZeroAll')){
+            value['hasZeroAll'] = true;
+          } else if(value instanceof ApplicationZoom && value.application == this.value.zoomComponent && !this.selectedOptions.includes('hasZeroAll')){
+            value['hasZeroAll'] = false;
+          }
+        });
+      }
     }
   }
 
@@ -125,7 +134,7 @@ export class FieldEditComponent {
   }
 
   onChangeRelation(value) {
-    if (value)
+    if (value && value.includes('zoom'))
       this.valueOptions = [...this.valueOptions, { value: 'hasZeroAll', label: "Suporta opção 'Todos'" }];
     else {
       this.valueOptions = [...this.baseValueOptions];
