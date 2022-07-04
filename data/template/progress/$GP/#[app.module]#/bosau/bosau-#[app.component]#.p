@@ -288,7 +288,7 @@ procedure validateRecord private:
     for first tmp#[app.component,AblTempTable,PascalCase]# no-lock:
 @[app.fields,isMandatory&ablFixedValue=&!isAuto]@
         if tmp#[app.component,AblTempTable,PascalCase]#.#[field]# = ??[!ablType=date]?
-        or?[end]? ?[!ablType=date]?tmp#[app.component,AblTempTable,PascalCase]#.#[field]# =?[end]? ?[ablType=character]?""?[end]??[ablType=logical]???[end]??[!ablType=character&!ablType=logical&!ablType=date]?0?[end]?
+        or?[end]? ?[!ablType=date]?tmp#[app.component,AblTempTable,PascalCase]#.#[field]# =?[end]? ?[ablType=character]?""?[end]??[!ablType=character&!ablType=logical&!ablType=date&!hasZeroAll]?0?[end]?
         then run insertOtherError(
                 input 0,
                 input "Preencha o campo '#[description,PascalCase]#'",

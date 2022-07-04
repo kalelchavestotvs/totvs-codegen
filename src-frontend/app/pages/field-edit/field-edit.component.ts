@@ -26,6 +26,7 @@ export class FieldEditComponent {
     { value: 'isFilter', label: 'Filtro' },
     { value: 'isRangeFilter', label: 'Filtro por faixa' }
   ];
+  hasZeroAllOption: PoCheckboxGroupOption = { value: 'hasZeroAll', label: "Suporta opção 'Todos'" };
   valueOptions: PoCheckboxGroupOption[] = [
     ...this.baseValueOptions
   ];
@@ -38,15 +39,6 @@ export class FieldEditComponent {
     this.relations = relations;
     this.prepareToLoad();
     this.title = this.value.field;
-
-    if(this.relation && this.relation.includes('zoom'))
-      this.valueOptions = [...this.valueOptions, { value: 'hasZeroAll', label: "Suporta opção 'Todos'" }];
-    else {
-      this.valueOptions = [...this.baseValueOptions];
-      this.selectedOptions = this.selectedOptions.filter((value) => {
-        return value != 'hasZeroAll';
-      })
-    }
 
     let _modal = this.modal;
     let _value = this.value;
@@ -107,12 +99,6 @@ export class FieldEditComponent {
   }
 
   private prepareToLoad() {
-    this.selectedOptions = [];
-    this.valueOptions.forEach(item => {
-      if (!!this.value[item.value])
-        this.selectedOptions.push(item.value);
-    });
-
     this.relation = null;
     if (this.relations?.length>0) {
       this.relationOptions = this.relations.map(item => {
@@ -131,17 +117,36 @@ export class FieldEditComponent {
     else {
       this.relationOptions = null;
     }
+
+    this.selectedOptions = [];
+    this.hasZeroAllControl(this.relation);
+    this.valueOptions.forEach(item => {
+      if (!!this.value[item.value])
+        this.selectedOptions.push(item.value);
+    });
   }
 
   onChangeRelation(value) {
-    if (value && value.includes('zoom'))
-      this.valueOptions = [...this.valueOptions, { value: 'hasZeroAll', label: "Suporta opção 'Todos'" }];
-    else {
+    this.hasZeroAllControl(value);
+  }
+
+  hasZeroAllControl(relation: any) {
+    if (relation && relation.includes('zoom') && !this.includesHasZeroAll()){
+      this.valueOptions = [...this.valueOptions, this.hasZeroAllOption];
+    }
+    else if (!(relation && relation.includes('zoom'))){
       this.valueOptions = [...this.baseValueOptions];
       this.selectedOptions = this.selectedOptions.filter((value) => {
         return value != 'hasZeroAll';
-      });
+      })
     }
   }
 
+  includesHasZeroAll(): boolean {
+    for(const option of this.valueOptions){
+      if(option.value == 'hasZeroAll')
+        return true;
+    }
+    return false;
+  }
 }
