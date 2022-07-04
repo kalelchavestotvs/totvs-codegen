@@ -79,7 +79,7 @@ export class ApplicationField implements IFieldProperties {
   isLink:boolean;
   isFilter:boolean;
   isRangeFilter:boolean;
-  hasZeroAll:boolean;
+  hasZeroAll:boolean = false;
 
   parseJsonToObject(data:any): ApplicationField {
     Object.assign(this, data);
