@@ -123,5 +123,4 @@ export class #[app.component,PascalCase]#DetailComponent implements OnInit {
 
 @[end]@?[end]?
 
-
 }
