@@ -52,7 +52,7 @@ function buildTemplate(appData:any,outputPath:string,template:string): Promise<b
 function buildFile(data:TemplateFile): Promise<boolean> {
     let templateParser = new TemplateParser()
     let dirname = path.dirname(data.outputFile)
-    
+
     return new Promise(resolve => {
         try {
             fs.readFile(data.inputFile, (err,bf) => {
@@ -61,7 +61,7 @@ function buildFile(data:TemplateFile): Promise<boolean> {
 
                 if (!fs.existsSync(dirname))
                     fs.mkdirSync(dirname, {recursive:true})
-                
+
                 fs.writeFile(data.outputFile, content, (err) => {
                     if (err) {
                         console.log(err)
@@ -70,8 +70,8 @@ function buildFile(data:TemplateFile): Promise<boolean> {
                     else
                         resolve(true)
                 })
-            })    
-        } 
+            })
+        }
         catch (err) {
             console.log(err)
             resolve(false)
@@ -136,15 +136,16 @@ function parseFiles(list:TemplateFile[],appData:IApplication) {
 
 
 const codeGen = {
-    
+
     generate: (appName:string,sessionId:string,templates:string[]): Promise<string> => {
         let _results: Promise<boolean>[] = []
         let _appData = Object.assign({},loadAppData(appName))
+        _appData['generationDateFormatted'] = new Date().toLocaleDateString();
         let _folder = prepareFolder(appName,sessionId)
         templates.forEach(template => _results.push(buildTemplate(_appData,_folder,template)))
         return Promise.all(_results).then(() => resultFolder(appName,sessionId))
     }
-    
+
 }
 
 export default codeGen

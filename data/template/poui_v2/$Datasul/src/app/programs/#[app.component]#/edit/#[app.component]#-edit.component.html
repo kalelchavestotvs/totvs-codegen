@@ -5,7 +5,7 @@
   (p-save)="onSave()">
   <ng-container *ngIf="data">
 @[app.fields,ablFixedValue=]@
-?[!zoomComponent=]?
+?[!zoomComponent=&!hasZeroAll]?
     <div class="po-row">
         <po-lookup
           name="#[name]#"
@@ -20,6 +20,18 @@
           [p-field-value]="#[zoom.component,camelCase]#Zoom.FIELD_VALUE"
           [p-field-format]="#[zoom.component,camelCase]#Zoom.fieldFormat">
         </po-lookup>
+    </div>
+?[end]??[!zoomComponent=&hasZeroAll=true]?
+    <div class="po-row">
+        <gps-lookup-toggle
+          name="#[name]#"
+          class="po-sm-12 po-md-6 po-lg-6 po-xl-6 po-offset-lg-3 po-offset-xl-3 po-offset-md-3"
+          label="#[description]#"
+          [zoomService]="#[zoom.component,camelCase]#Zoom"
+          [(ngModel)]="data.#[name]#"
+          [isDisable]="this.isNew ? #[isAuto]# : #[isEditable,negate]#"
+          lookupClass="po-sm-8 po-md-8 po-lg-8 po-xl-8">
+        </gps-lookup-toggle>
     </div>
 ?[end]??[!enumComponent=]?
     <div class="po-row">

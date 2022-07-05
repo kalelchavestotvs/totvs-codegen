@@ -14,7 +14,8 @@ import { #[component,PascalCase]#Enum } from '../enum/#[component]#.enum';
 @[app.zooms]@
 import { #[component,PascalCase]# } from '../models/#[component]#';
 import { #[component,PascalCase]#Zoom } from '../zoom/#[component]#.zoom';
-@[end]@
+@[end]@?[app.useCacheService]?
+import { TotvsGpsCacheService } from 'totvs-gps-services';?[end]?
 
 @Component({
   selector: 'app-#[app.component]#-list',
@@ -39,16 +40,20 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
   //#endregion
 
   constructor(
-@[app.zooms]@
-    public #[component,camelCase]#Zoom: #[component,PascalCase]#Zoom,
-@[end]@
     private service:#[app.component,PascalCase]#Service,
     private router:Router,
     private dialogService:PoDialogService,
     private notificationService:PoNotificationService,
-    private paramService:ParamService
+    private paramService:ParamService,?[app.useCacheService]?
+    private cacheService: TotvsGpsCacheService,?[end]?
+@[app.zooms]@
+    public #[component,camelCase]#Zoom: #[component,PascalCase]#Zoom,
+@[end]@
   ) {
-    this.pageNavigation.setRouter(router);
+    this.pageNavigation.setRouter(router);?[app.useCacheService]?
+@[app.zooms]@
+    this.cacheService.addService(new #[component,PascalCase]#(), this.#[component,camelCase]#Zoom);
+@[end]@?[end]?
   }
 
   ngOnInit(){
@@ -158,7 +163,7 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
   }
 
   clearEmptyFilterFields(){
-    for(let i in this.pageFilter.filter){      
+    for(let i in this.pageFilter.filter){
       if(!this.pageFilter.filter[i])
         this.pageFilter.filter[i] = null;
     }
@@ -228,10 +233,12 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
   //#region Metodos de montagem dos dados
   private extend#[app.component,PascalCase]#(item:#[app.component,PascalCase]#): #[app.component,PascalCase]#Extended {
     let result = new #[app.component,PascalCase]#Extended().parseJsonToObject(item);
-    @[app.fields,!enumComponent=]@
+@[app.fields,!enumComponent=]@
     result.$#[name]#Description = #[enumComponent,PascalCase]#Enum.getDescription(result.#[name]#);
-
-@[end]@
+@[end]@?[app.useCacheService]?
+@[app.fields,!zoomComponent=]@
+    this.cacheService.extend(new #[zoom.component,PascalCase]#().parseJsonToObject({#[zoom.keyField]#: result.#[name]#}), #[hasZeroAll]#).then((value) => result.parseJsonToObject(value));
+@[end]@?[end]??[!app.useCacheService]?
 @[app.fields,!zoomComponent=]@
     this.extend#[zoom.component,PascalCase]#(result.#[name]#).then((value: #[zoom.component,PascalCase]#) => {
         let model = new #[zoom.component,PascalCase]#();
@@ -246,18 +253,17 @@ export class #[app.component,PascalCase]#ListComponent implements OnInit {
         result.parseJsonToObject(new #[zoom.component,PascalCase]#().parseJsonToObject({#[zoom.keyField]#: result.#[name]#, #[zoom.labelField]#:'Não encontrado(a)'}))
     });
 
-@[end]@
+@[end]@?[end]?
+
     result.$actions = ['edit','remove'];
     return result;
   }
-
+?[!app.useCacheService]?
 @[app.zooms]@
   private extend#[component,PascalCase]#(value) {
-    let model = new #[component,PascalCase]#().parseJsonToObject({#[keyField]#: value});
-    return this.#[component,camelCase]#Zoom.zoomById(model);
+      let model = new #[component,PascalCase]#().parseJsonToObject({#[keyField]#: value});
+      return this.#[component,camelCase]#Zoom.zoomById(model);
   }
 
-@[end]@
-  //#endregion
-
+@[end]@?[end]?
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, from } from 'rxjs';
+import { Observable, from, of } from 'rxjs';
 import { PoLookupColumn, PoLookupFilter, PoLookupFilteredItemsParams, PoLookupResponseApi } from '@po-ui/ng-components';
 import { TotvsGpsServices, TTalkCollection } from 'totvs-gps-services';
 import { #[zoom.component,PascalCase]# } from '../models/#[zoom.component]#';
@@ -30,7 +30,10 @@ export class #[zoom.component,PascalCase]#Zoom implements PoLookupFilter {
             .setPathParams(#[zoom.component,camelCase]#)
             .get();
     }
-    //#endregion
+
+    get(#[zoom.component,camelCase]#:#[zoom.component,PascalCase]#): Promise<#[zoom.component,PascalCase]#> {
+        return this.zoomById(#[zoom.component,camelCase]#);
+    }
 
     //#region Zoom definition
     private readonly columnNames = [
@@ -69,6 +72,13 @@ export class #[zoom.component,PascalCase]#Zoom implements PoLookupFilter {
     }
 
     getObjectByValue(value: string): Observable<any> {
+      ?[zoom.hasZeroAll]?
+        if(value == '0') {
+            return of(new #[zoom.component,PascalCase]#().parseJsonToObject({
+              #[zoom.keyField]#: '0',
+              #[zoom.labelField]#: 'Todos'
+            }));
+        }?[end]?
         let #[zoom.component,camelCase]#: #[zoom.component,PascalCase]# = new #[zoom.component,PascalCase]#();
         #[zoom.component,camelCase]#.#[zoom.keyField]# = ?[zoom.isNumeric]?Number.parseInt(?[end]?value?[zoom.isNumeric]?)?[end]?;
         return from(this.zoomById(#[zoom.component,camelCase]#));

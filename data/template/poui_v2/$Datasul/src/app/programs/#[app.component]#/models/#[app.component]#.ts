@@ -6,7 +6,7 @@ export class #[app.component,PascalCase]# {
   get primaryKeys() { return [@[app.fields,isPrimary]@?[!isFirst]?,?[end]?'#[name]#'@[end]@] };
 
 @[app.fields]@
-  ?[jsType=Date]?#[name]#:#[jsType]# = null;?[end]??[!jsType=Date]?#[name]#:#[jsType]#;?[end]?
+  #[name]#:#[jsType]#?[jsType=number&hasZeroAll=true]? | string?[end]??[jsType=Date]? = null?[end]?;
 @[end]@
 
   parseJsonToObject(jsonData): #[app.component,PascalCase]# {

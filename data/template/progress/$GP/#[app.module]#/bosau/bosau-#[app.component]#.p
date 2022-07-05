@@ -1,6 +1,16 @@
 using classes.query.*.
 using classes.utils.*.
 
+/****************************
+    Programa .....: #[app.component]#.p
+    Data .........: #[app.generationDateFormatted]#
+    Empresa ......: TOTVS SAUDE
+    Equipe........: #[app.team]#
+    Programador ..: xxxxx
+    Objetivo .....: Programa responsavel por processar os dados da tela
+                    #[app.description,pascalCase]#
+***************************/
+
 {include/i-prgvrs.i BOSAU-#[app.component,Upper]# 2.00.02.001 } /*** 010201 ***/
 
 &IF "{&EMSFND_VERSION}" >= "1.00" &THEN
@@ -273,12 +283,12 @@ end.
 
 procedure validateRecord private:
     define input        parameter table for tmp#[app.component,AblTempTable,PascalCase]#.
-    define input-output parameter table for rowErrors.    
+    define input-output parameter table for rowErrors.
 
     for first tmp#[app.component,AblTempTable,PascalCase]# no-lock:
 @[app.fields,isMandatory&ablFixedValue=&!isAuto]@
-        if tmp#[app.component,AblTempTable,PascalCase]#.#[field]# = ??[!ablType=date]?
-        or?[end]? ?[!ablType=date]?tmp#[app.component,AblTempTable,PascalCase]#.#[field]# =?[end]? ?[ablType=character]?""?[end]??[ablType=logical]???[end]??[!ablType=character&!ablType=logical&!ablType=date]?0?[end]?
+        if tmp#[app.component,AblTempTable,PascalCase]#.#[field]# = ??[!ablType=date&!hasZeroAll]?
+        or?[end]? ?[!ablType=date&!hasZeroAll]?tmp#[app.component,AblTempTable,PascalCase]#.#[field]# =?[end]? ?[ablType=character]?""?[end]??[!ablType=character&!ablType=logical&!ablType=date&!hasZeroAll]?0?[end]?
         then run insertOtherError(
                 input 0,
                 input "Preencha o campo '#[description,PascalCase]#'",
@@ -286,14 +296,14 @@ procedure validateRecord private:
                 input "GP",
                 input "ERROR",
                 input "",
-                input-output table rowErrors).                    
+                input-output table rowErrors).
 
 @[end]@
     end.
 
     if containsAnyError(input table rowErrors)
     then return "NOK".
-    
+
     return "OK".
 end procedure.
 

@@ -1,6 +1,16 @@
 using classes.json.GpsJsonUtils.
 using classes.utils.GpsUtils.
 
+/****************************
+    Programa .....: #[app.component,camelCase,Plural]#.p
+    Data .........: #[app.generationDateFormatted]#
+    Empresa ......: TOTVS SAUDE
+    Equipe........: #[app.team]#
+    Programador ..: xxxxx
+    Objetivo .....: Programa responsavel por processar os dados da tela
+                    #[app.description,pascalCase]#
+***************************/
+
 {utp/ut-api.i}
 {utp/ut-api-utils.i}
 {utp/ut-api-action.i getById        GET    /@[app.fields,isPrimary]@~*/@[end]@ }
@@ -69,7 +79,7 @@ procedure getById:
     run setupInputParameters(input jsonInput).
 
 @[app.fields,isPrimary]@
-    ?[isFirst]?assign?[end]? ?[!isFirst]?      ?[end]?#[field]#-aux = ?[ablType=date]?oGpsUtils:changeIsoToDate?[end]??[!ablType=date]?#[ablType,ABLCast]#?[end]?(pathParams:getCharacter(#[sequence]#))            
+    ?[isFirst]?assign?[end]? ?[!isFirst]?      ?[end]?#[field]#-aux = ?[ablType=date]?oGpsUtils:changeIsoToDate?[end]??[!ablType=date]?#[ablType,ABLCast]#?[end]?(pathParams:getCharacter(#[sequence]#))
 @[end]@ no-error.
 
     {hdp/hdrunpersis.i "#[app.module]#/bosau/bosau-#[app.component]#.p" "h-bosau-#[app.component]#-aux"}

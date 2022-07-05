@@ -103,6 +103,15 @@ export class #[app.component,PascalCase]#EditComponent implements OnInit {
     if(!this.data)
       this.data = new #[app.component,PascalCase]#();
     Object.assign(this.data,value);
+
+    if(!this.isNew)
+      this.convertFieldsToString([@[app.fields,hasZeroAll]@'#[name]#',@[end]@]);
+  }
+
+  convertFieldsToString(fields: Array<string>) {
+    fields.forEach((field: string) => {
+      this.data[field] = this.data[field].toString();
+    })
   }
 
 }

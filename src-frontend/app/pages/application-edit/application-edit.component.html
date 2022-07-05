@@ -8,16 +8,16 @@
     <po-accordion class="po-row">
       <po-accordion-item p-label="Dados da aplicação" #accordionComponent>
         <div class="po-row" *ngIf="application">
-          <po-combo 
-            class="po-md-6"
+          <po-combo
+            class="po-md-5"
             name="table"
             p-label="Tabela"
             [p-options]="tableOptions"
             (p-change)="onTableChange()"
             [(ngModel)]="application.table">
           </po-combo>
-          <po-input 
-            class="po-md-6"
+          <po-input
+            class="po-md-5"
             name="component"
             [p-disabled]="!application.table"
             p-label="Nome do componente"
@@ -26,28 +26,37 @@
             (p-change)="onChangeComponent()"
             [(ngModel)]="application.component">
           </po-input>
-          <po-input 
+          <po-switch
+            p-label="Usa cache service"
+            name="useCacheService"
+            class="po-md-2"
+            p-label-off="Não"
+            p-label-on="Sim"
+            p-tooltip="Utilizar para versão 5.0.10 ou superior do totvs-gps-services"
+            [(ngModel)]="application.useCacheService">
+          </po-switch>
+          <po-input
             class="po-md-6"
             name="description"
             [p-disabled]="!application.table"
             p-label="Descrição"
             [(ngModel)]="application.description">
           </po-input>
-          <po-input 
+          <po-input
             class="po-md-2"
             name="module"
             [p-disabled]="!application.table"
             p-label="Módulo"
             [(ngModel)]="application.module">
           </po-input>
-          <po-input 
+          <po-input
             class="po-md-2"
             name="version"
             [p-disabled]="!application.table"
             p-label="Versão"
             [(ngModel)]="application.version">
           </po-input>
-          <po-input 
+          <po-input
             class="po-md-2"
             name="team"
             [p-disabled]="!application.table"
@@ -60,10 +69,10 @@
       <po-accordion-item p-label="Propriedades" #accordionProperties>
         <ng-container *ngIf="application">
           <!-- campos -->
-          <po-widget 
+          <po-widget
             class="po-md-6 po-mb-2"
             p-title="Campos adicionados">
-            <po-table 
+            <po-table
               class="po-md-12"
               p-hide-text-overflow
               p-height="400"
@@ -73,10 +82,10 @@
             </po-table>
           </po-widget>
 
-          <po-widget 
+          <po-widget
             class="po-md-3 po-mb-2"
             p-title="Campos disponíveis">
-            <po-table 
+            <po-table
               class="po-md-12"
               p-hide-text-overflow
               p-height="400"
@@ -87,12 +96,12 @@
           </po-widget>
 
           <!-- relacionamentos -->
-          <po-widget 
+          <po-widget
             class="po-md-3 po-mb-2"
             p-title="Relacionamentos"
             p-primary-label="Adicionar"
             (p-primary-action)="onAddRelationClick()">
-            <po-table 
+            <po-table
               class="po-md-12"
               p-hide-text-overflow
               p-height="360"

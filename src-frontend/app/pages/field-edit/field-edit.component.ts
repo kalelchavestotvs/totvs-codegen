@@ -15,7 +15,7 @@ export class FieldEditComponent {
   value: ApplicationField;
   title = '';
   selectedOptions = [];
-  valueOptions: PoCheckboxGroupOption[] = [
+  baseValueOptions = [
     { value: 'isPrimary', label: 'Chave Primária' },
     { value: 'isMandatory', label: 'Obrigatório' },
     { value: 'isEditable', label: 'Editável' },
@@ -26,7 +26,11 @@ export class FieldEditComponent {
     { value: 'isFilter', label: 'Filtro' },
     { value: 'isRangeFilter', label: 'Filtro por faixa' }
   ];
-  relation:string;
+  hasZeroAllOption: PoCheckboxGroupOption = { value: 'hasZeroAll', label: "Suporta opção 'Todos'" };
+  valueOptions: PoCheckboxGroupOption[] = [
+    ...this.baseValueOptions
+  ];
+  relation:string = '';
   relations:Array<ApplicationEnum | ApplicationZoom> = [];
   relationOptions: IPoComboOptionData[] = [];
 
@@ -42,10 +46,10 @@ export class FieldEditComponent {
     let _prepareToSave = this.prepareToSave.bind(this);
 
     return new Promise(resolve => {
-      
+
       _modal.primaryAction = {
         label: 'Salvar',
-        action: () => { 
+        action: () => {
           _prepareToSave();
           _modal.close();
           resolve(_value);
@@ -55,7 +59,7 @@ export class FieldEditComponent {
 
       _modal.secondaryAction = {
         label: 'Cancelar',
-        action: () => { 
+        action: () => {
           _modal.close();
           resolve();
           _clear();
@@ -76,22 +80,25 @@ export class FieldEditComponent {
     });
     this.value.enumComponent = null;
     this.value.zoomComponent = null;
+
     if (this.relation && this.relationOptions) {
       let _r = this.relationOptions.find(item => item.value == this.relation);
       if (_r.$data instanceof ApplicationEnum)
         this.value.enumComponent = _r.$data.component;
-      else if (_r.$data instanceof ApplicationZoom)
+      else if (_r.$data instanceof ApplicationZoom){
         this.value.zoomComponent = _r.$data.application;
+        this.relations.forEach((value) => {
+          if(value instanceof ApplicationZoom && value.application == this.value.zoomComponent && this.selectedOptions.includes('hasZeroAll')){
+            value['hasZeroAll'] = true;
+          } else if(value instanceof ApplicationZoom && value.application == this.value.zoomComponent && !this.selectedOptions.includes('hasZeroAll')){
+            value['hasZeroAll'] = false;
+          }
+        });
+      }
     }
   }
 
   private prepareToLoad() {
-    this.selectedOptions = [];
-    this.valueOptions.forEach(item => {
-      if (!!this.value[item.value]) 
-        this.selectedOptions.push(item.value);
-    });
-
     this.relation = null;
     if (this.relations?.length>0) {
       this.relationOptions = this.relations.map(item => {
@@ -110,6 +117,36 @@ export class FieldEditComponent {
     else {
       this.relationOptions = null;
     }
+
+    this.selectedOptions = [];
+    this.hasZeroAllControl(this.relation);
+    this.valueOptions.forEach(item => {
+      if (!!this.value[item.value])
+        this.selectedOptions.push(item.value);
+    });
   }
 
+  onChangeRelation(value) {
+    this.hasZeroAllControl(value);
+  }
+
+  hasZeroAllControl(relation: any) {
+    if (relation && relation.includes('zoom') && !this.includesHasZeroAll()){
+      this.valueOptions = [...this.valueOptions, this.hasZeroAllOption];
+    }
+    else if (!(relation && relation.includes('zoom'))){
+      this.valueOptions = [...this.baseValueOptions];
+      this.selectedOptions = this.selectedOptions.filter((value) => {
+        return value != 'hasZeroAll';
+      })
+    }
+  }
+
+  includesHasZeroAll(): boolean {
+    for(const option of this.valueOptions){
+      if(option.value == 'hasZeroAll')
+        return true;
+    }
+    return false;
+  }
 }
