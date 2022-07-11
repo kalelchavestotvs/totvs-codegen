@@ -6,6 +6,7 @@ import { GpsPageNavigation, GpsCRUDMaintenancePage } from 'totvs-gps-crud';
 import { #[app.component,PascalCase]#Service } from '../services/#[app.component]#.service';
 import { #[app.component,PascalCase]# } from '../models/#[app.component]#';
 import { #[app.component,PascalCase]#Extended } from '../models/#[app.component]#-extended';
+import { #[app.component,PascalCase]#Enum } from '../enum/#[app.component]#.enum';
 @[app.enums]@
 import { #[component,PascalCase]#Enum } from '../enum/#[component]#.enum';
 @[end]@
@@ -54,9 +55,18 @@ export class #[app.component,PascalCase]#DetailComponent implements OnInit {
           .then(result => {
             this.gpsPageDetail.hideLoading();
             this.setData(result);
+            this.initCustom();
           })
           .catch(() => this.onBack());
       });
+  }
+
+  initCustom(){
+    this.gpsPageDetail.setupCustomFields(
+      #[app.component,PascalCase]#Enum.APP_NAME,
+      #[app.component,PascalCase]#Enum.CUSTOM_DETAIL,
+      this.maintenanceController.urlSegments,
+      this.service);
   }
 
   onBack() {

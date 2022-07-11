@@ -2,7 +2,8 @@
   #gpsPageEdit
   [p-title]="getPageTitle()"
   (p-cancel)="onCancel()"
-  (p-save)="onSave()">
+  (p-save)="onSave()"
+  p-custom-fields-class="po-offset-md-3 po-offset-lg-3 po-offset-xl-3">
   <ng-container *ngIf="data">
 @[app.fields,ablFixedValue=]@
 ?[!zoomComponent=&!hasZeroAll]?

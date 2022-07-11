@@ -5,6 +5,7 @@ import { GpsPageEditComponent } from 'totvs-gps-controls';
 import { GpsPageNavigation, GpsCRUDMaintenancePage } from 'totvs-gps-crud';
 import { #[app.component,PascalCase]#Service } from '../services/#[app.component]#.service';
 import { #[app.component,PascalCase]# } from '../models/#[app.component]#';
+import { #[app.component,PascalCase]#Enum } from '../enum/#[app.component]#.enum';
 @[app.enums]@
 import { #[component,PascalCase]#Enum } from '../enum/#[component]#.enum';
 @[end]@
@@ -47,8 +48,18 @@ export class #[app.component,PascalCase]#EditComponent implements OnInit {
 
   ngOnInit() {
     this.maintenanceController.getObjectFromRouteParams()
-      .then((result: #[app.component,PascalCase]#) => this.initializePage(result))
+      .then((result: #[app.component,PascalCase]#) => { this.initializePage(result); this.initCustom(); })
       .catch(() => this.onBack());
+  }
+
+  private initCustom() {
+    this.gpsPageEdit.setupCustomFields(
+      #[app.component,PascalCase]#Enum.APP_NAME,
+      #[app.component,PascalCase]#Enum.CUSTOM_EDIT,
+      #[app.component,PascalCase]#Enum.CUSTOM_EDIT_VALIDATE,
+      #[app.component,PascalCase]#Enum.CUSTOM_EDIT_SAVE,
+      this.maintenanceController.urlSegments,
+      this.service);
   }
 
   private initializePage(data: #[app.component,PascalCase]#){
@@ -92,10 +103,13 @@ export class #[app.component,PascalCase]#EditComponent implements OnInit {
   onSave() {
     this.gpsPageEdit.showLoading('Salvando dados...');
     let _promise: Promise<#[app.component,PascalCase]#> = this.isNew ?
-        this.service.insert(this.data).then(value => { this.notificationService.success('Registro cadastrado com sucesso!'); return value; })
-      : this.service.update(this.data).then(value => { this.notificationService.success('Registro alterado com sucesso!'); return value; });
+        this.gpsPageEdit.insert(this.data).then(value => { this.notificationService.success('Registro cadastrado com sucesso!'); return value; })
+      : this.gpsPageEdit.update(this.data).then(value => { this.notificationService.success('Registro alterado com sucesso!'); return value; });
     _promise
-      .then(result => this.onBack())
+      .then(result => {
+        this.gpsPageEdit.saveCustom(result).catch(() => {});
+        this.onBack();
+      })
       .finally(() => this.gpsPageEdit.hideLoading());
   }
 
