@@ -1,15 +1,15 @@
 using classes.query.*.
 using classes.utils.*.
 
-/****************************
-    Programa .....: #[app.component]#.p
+/********************************************************************************
+    Programa .....: bosau-#[app.component]#.p
     Data .........: #[app.generationDateFormatted]#
     Empresa ......: TOTVS SAUDE
     Equipe........: #[app.team]#
     Programador ..: xxxxx
     Objetivo .....: Programa responsavel por processar os dados da tela
-                    #[app.description,pascalCase]#
-***************************/
+                    #[app.description,pascalCase]# (#[app.module]#.#[app.component,camelCase]#)
+*******************************************************************************/
 
 {include/i-prgvrs.i BOSAU-#[app.component,Upper]# 2.00.02.001 } /*** 010201 ***/
 

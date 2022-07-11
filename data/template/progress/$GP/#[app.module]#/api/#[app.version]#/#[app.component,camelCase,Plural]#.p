@@ -1,15 +1,15 @@
 using classes.json.GpsJsonUtils.
 using classes.utils.GpsUtils.
 
-/****************************
+/********************************************************************************
     Programa .....: #[app.component,camelCase,Plural]#.p
     Data .........: #[app.generationDateFormatted]#
     Empresa ......: TOTVS SAUDE
     Equipe........: #[app.team]#
     Programador ..: xxxxx
     Objetivo .....: Programa responsavel por processar os dados da tela
-                    #[app.description,pascalCase]#
-***************************/
+                    #[app.description,pascalCase]# (#[app.module]#.#[app.component,camelCase]#)
+*******************************************************************************/
 
 {utp/ut-api.i}
 {utp/ut-api-utils.i}
