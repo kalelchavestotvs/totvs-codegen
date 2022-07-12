@@ -65,8 +65,7 @@ export class #[app.component,PascalCase]#DetailComponent implements OnInit {
     this.gpsPageDetail.setupCustomFields(
       #[app.component,PascalCase]#Enum.APP_NAME,
       #[app.component,PascalCase]#Enum.CUSTOM_DETAIL,
-      this.maintenanceController.urlSegments,
-      this.service);
+      this.maintenanceController.urlSegments);
   }
 
   onBack() {
